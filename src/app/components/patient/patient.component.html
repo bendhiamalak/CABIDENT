@@ -1,0 +1,95 @@
+<div class="container">
+  <h1>Gestion des Patients</h1>
+
+  <!-- Formulaire pour ajouter un patient -->
+  <div class="form-section">
+    <h2>Ajouter un Patient</h2>
+    <form (ngSubmit)="addPatient()">
+      <div>
+        <label for="nom">Nom:</label>
+        <input id="nom" [(ngModel)]="newPatient.nom" name="nom" required />
+      </div>
+      <div>
+        <label for="prenom">Prénom:</label>
+        <input
+          id="prenom"
+          [(ngModel)]="newPatient.prenom"
+          name="prenom"
+          required
+        />
+      </div>
+      <div>
+        <label for="telephone">Téléphone:</label>
+        <input
+          id="telephone"
+          [(ngModel)]="newPatient.telephone"
+          name="telephone"
+          required
+        />
+      </div>
+      <button type="submit">Ajouter</button>
+    </form>
+  </div>
+
+  <!-- Formulaire pour mettre à jour un patient -->
+  <div class="form-section" *ngIf="selectedPatient">
+    <h2>Modifier un Patient</h2>
+    <form (ngSubmit)="updatePatient()">
+      <div>
+        <label for="update-nom">Nom:</label>
+        <input
+          id="update-nom"
+          [(ngModel)]="selectedPatient.nom"
+          name="nom"
+          required
+        />
+      </div>
+      <div>
+        <label for="update-prenom">Prénom:</label>
+        <input
+          id="update-prenom"
+          [(ngModel)]="selectedPatient.prenom"
+          name="prenom"
+          required
+        />
+      </div>
+      <div>
+        <label for="update-telephone">Téléphone:</label>
+        <input
+          id="update-telephone"
+          [(ngModel)]="selectedPatient.telephone"
+          name="telephone"
+          required
+        />
+      </div>
+      <button type="submit">Mettre à jour</button>
+      <button type="button" (click)="selectedPatient = null">Annuler</button>
+    </form>
+  </div>
+
+  <!-- Liste des patients -->
+  <div class="list-section">
+    <h2>Liste des Patients</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Téléphone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>{{ patient.nom }}</td>
+          <td>{{ patient.prenom }}</td>
+          <td>{{ patient.telephone }}</td>
+          <td>
+            <button (click)="selectPatient(patient)">Modifier</button>
+            <button (click)="deletePatient(patient.id!)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
