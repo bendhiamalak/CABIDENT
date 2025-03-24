@@ -5,7 +5,7 @@ export enum StatutRendezVous {
     TERMINE = 'terminé'
   }
   
-export interface RenderVous {
+export interface RendezVous {
   id?: string;
   patientId: string;
   nom: string;

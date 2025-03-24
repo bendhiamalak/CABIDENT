@@ -1,10 +1,1 @@
-<button (click)="addDocument()">Ajouter un document</button>
-<button (click)="getDocuments()">Récupérer des documents</button>
-<ul>
-  <li *ngFor="let doc of documents">
-    {{ doc | json }}
-    <button (click)="updateDocument(doc.id)">Modifier</button>
-    <button (click)="deleteDocument(doc.id)">Supprimer</button>
-  </li>
-</ul>
 <router-outlet></router-outlet>

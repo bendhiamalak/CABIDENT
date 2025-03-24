@@ -1,60 +1,4 @@
 
-:root {
-    --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --heading-font: "Raleway",  sans-serif;
-    --nav-font: "Poppins",  sans-serif;
-  }
-  
-  /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-  :root { 
-    --background-color: #ffffff; /* Background color for the entire website, including individual sections */
-    --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
-    --heading-color: #555555; /* Color for headings, subheadings and title throughout the website */
-    --accent-color: #78c2ad; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-    --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-    --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
-  }
-  
-  /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
-  :root {
-    --nav-color: #444444;  /* The default color of the main navmenu links */
-    --nav-hover-color: #78C2AD; /* Applied to main navmenu links when they are hovered over or active */
-    --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
-    --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-    --nav-dropdown-color: #444444; /* Used for navigation links of the dropdown items in the navigation menu. */
-    --nav-dropdown-hover-color: #78C2AD; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
-  }
-  
-  /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
-  
-  .light-background {
-    --background-color: #f7fcfc;
-    --surface-color: #ffffff;
-  }
-  
-  .dark-background {
-    --background-color: #060606;
-    --default-color: #ffffff;
-    --heading-color: #ffffff;
-    --surface-color: #252525;
-    --contrast-color: #ffffff;
-  }
-  
-  .accent-background {
-    --background-color: #78C2AD;
-    --default-color: #ffffff;
-    --heading-color: #ffffff;
-    --surface-color: #78C2AD;
-  }
-  
-  /* Smooth scroll */
-  :root {
-    scroll-behavior: smooth;
-  }
-  
-  /*--------------------------------------------------------------
-  # General Styling & Shared Classes
-  --------------------------------------------------------------*/
   body {
     color: #444444;
     background-color: #ffffff;
@@ -648,7 +592,7 @@
   /*--------------------------------------------------------------
   # Preloader
   --------------------------------------------------------------*/
-  #preloader {
+  /*#preloader {
     position: fixed;
     inset: 0;
     z-index: 9999;
@@ -678,7 +622,7 @@
     100% {
       transform: rotate(360deg);
     }
-  }
+  }*/
   
   /*--------------------------------------------------------------
   # Scroll Top Button
@@ -1088,7 +1032,7 @@
 
 .call-to-action .cta-btn:hover {
     background: #ffffff; /* Remplacement de var(--contrast-color) */
-    color: #ffffff; /* Remplacement de var(--accent-color) */
+    color: #78c2ad; /* Remplacement de var(--accent-color) */
     border: 2px solid #ffffff; /* Remplacement de var(--accent-color) */
 }
 
@@ -1316,11 +1260,18 @@
 .appointment .php-email-form select {
   color: #444444; /* Remplacement de var(--default-color) */
   background-color: #ffffff; /* Remplacement de var(--surface-color) */
-  border-color: color-mix(in srgb, #444444, transparent 80%); /* Remplacement de var(--default-color) */
+  border-color: rgba(68, 68, 68, 0.2); /* Remplacement de var(--default-color) */
   border-radius: 0;
   box-shadow: none;
   font-size: 14px;
   padding: 10px !important;
+  pointer-events: auto !important;
+  user-select: auto !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+
+
 }
 
 .appointment .php-email-form input:focus,
@@ -1332,7 +1283,7 @@
 .appointment .php-email-form input::placeholder,
 .appointment .php-email-form textarea::placeholder,
 .appointment .php-email-form select::placeholder {
-  color: color-mix(in srgb, #444444, transparent 70%); /* Remplacement de var(--default-color) */
+  color: rgba(68, 68, 68, 0.3); /* Remplacement de var(--default-color) */
 }
 
 .appointment .php-email-form input,
@@ -1352,10 +1303,17 @@
   transition: 0.4s;
   border-radius: 4px;
 }
-
-.appointment .php-email-form button[type=submit]:hover {
-  background: color-mix(in srgb, #78C2AD 90%, white 15%); /* Remplacement de var(--accent-color) */
+input, textarea, select {
+  pointer-events: auto !important; /* Autorise les interactions */
+  opacity: 1 !important;
+  user-select: auto !important;
+  z-index: 1000 !important;
 }
+.appointment .php-email-form button[type=submit]:hover {
+  background: #8fd0be; /* Remplacement de var(--accent-color) */
+}
+
+
   /*--------------------------------------------------------------
 # Tabs Section
 --------------------------------------------------------------*/
@@ -1657,9 +1615,3 @@
   color: #78C2AD; /* Remplacement de var(--accent-color) */
 }
 
-/*--------------------------------------------------------------
-# Starter Section Section
---------------------------------------------------------------*/
-.starter-section {
-  /* Ajoutez vos styles ici */
-}

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Patient } from '../../models/patient';
 import { PatientService } from '../../services/patient.service';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-patient',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [ FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './patient.component.html',
   styleUrl: './patient.component.css'
 })

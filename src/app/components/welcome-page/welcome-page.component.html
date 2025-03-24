@@ -1,28 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <!-- Favicons -->
-    <!--
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
--->
-    <!-- Fonts -->
-    <!--
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
--->
-    <!-- Vendor CSS Files -->
-    <!--
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
--->
-  </head>
-
   <body class="index-page">
     <header id="header" class="header sticky-top">
       <div class="topbar d-flex align-items-center">
@@ -57,9 +34,7 @@
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <a class="cta-btn" href="index.html#appointment"
-            >Prendre Un Rendez-vous</a
-          >
+          <a class="cta-btn" href="#appointment">Prendre Un Rendez-vous</a>
         </div>
       </div>
     </header>
@@ -83,7 +58,7 @@
                 traitements adaptés à chaque patient. Votre santé bucco-dentaire
                 est notre priorité !
               </p>
-              <a href="#about" class="btn-get-started">Read More</a>
+              <a href="#about" class="btn-get-started">voir plus</a>
             </div>
           </div>
           <!-- End Carousel Item -->
@@ -469,81 +444,146 @@
         <!-- End Section Title -->
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
-          <form action="" method="post" role="form" class="php-email-form">
+          <form
+            [formGroup]="appointmentForm"
+            (ngSubmit)="onSubmit()"
+            class="php-email-form"
+          >
             <div class="row">
               <div class="col-md-4 form-group">
                 <input
                   type="text"
-                  name="name"
+                  formControlName="nom"
                   class="form-control"
-                  id="name"
+                  id="nom"
                   placeholder="Votre Nom"
-                  required=""
                 />
+                <div
+                  *ngIf="
+                    appointmentForm.get('nom')?.invalid &&
+                    appointmentForm.get('nom')?.touched
+                  "
+                >
+                  Le nom est requis.
+                </div>
               </div>
               <div class="col-md-4 form-group">
                 <input
                   type="text"
-                  name="name"
+                  formControlName="prenom"
                   class="form-control"
-                  id="name"
+                  id="prenom"
                   placeholder="Votre Prenom"
-                  required=""
                 />
+                <div
+                  *ngIf="
+                    appointmentForm.get('prenom')?.invalid &&
+                    appointmentForm.get('prenom')?.touched
+                  "
+                >
+                  Le prénom est requis.
+                </div>
               </div>
               <div class="col-md-4 form-group mt-3 mt-md-0">
                 <input
                   type="tel"
                   class="form-control"
-                  name="phone"
-                  id="phone"
+                  formControlName="telephone"
+                  id="telephone"
                   placeholder="Votre Telephone"
-                  required=""
                 />
-              </div> 
+                <div
+                  *ngIf="
+                    appointmentForm.get('telephone')?.invalid &&
+                    appointmentForm.get('telephone')?.touched
+                  "
+                >
+                  Un numéro de téléphone valide est requis.
+                </div>
+              </div>
             </div>
+
             <div class="row">
               <div class="col-md-4 form-group mt-3">
                 <input
-                  type="text"
-                  name="date"
-                  class="form-control datepicker"
-                  id="date"
+                  type="email"
+                  formControlName="email"
+                  class="form-control"
+                  id="email"
                   placeholder="Votre Email"
-                  required=""
                 />
+                <div
+                  *ngIf="
+                    appointmentForm.get('email')?.invalid &&
+                    appointmentForm.get('email')?.touched
+                  "
+                >
+                  Un email valide est requis.
+                </div>
               </div>
               <div class="col-md-4 form-group mt-3">
                 <input
-                  type="datetime-local"
-                  name="date"
-                  class="form-control datepicker"
+                  type="date"
+                  formControlName="date"
+                  class="form-control"
                   id="date"
-                  placeholder="Appointment Date"
-                  required=""
+                  placeholder="Date"
                 />
+                <div *ngIf="appointmentForm.controls['date'].errors">
+                  <p
+                    *ngIf="appointmentForm.controls['date'].errors['pastDate']"
+                    class="error"
+                  >
+                    Vous ne pouvez pas prendre un rendez-vous dans le passé.
+                  </p>
+                  <p
+                    *ngIf="
+                      appointmentForm.controls['date'].errors['invalidDay']
+                    "
+                    class="error"
+                  >
+                    Les rendez-vous ne sont pas disponibles les week-ends.
+                  </p>
+                </div>
               </div>
               <div class="col-md-4 form-group mt-3">
                 <input
-                  type="datetime-local"
-                  name="heure"
-                  class="form-control datepicker"
-                  id="date"
-                  placeholder="heure"
-                  required=""
+                  type="time"
+                  formControlName="heure"
+                  class="form-control"
+                  id="heure"
+                  placeholder="Heure"
                 />
+                <div
+                  *ngIf="
+                    appointmentForm.get('heure')?.invalid &&
+                    appointmentForm.get('heure')?.touched
+                  "
+                >
+                  <div
+                    *ngIf="appointmentForm.get('heure')?.errors?.['required']"
+                  >
+                    L'heure est requise.
+                  </div>
+                  <div
+                    *ngIf="appointmentForm.get('heure')?.errors?.['invalidTime']"
+                  >
+                    Veuillez choisir une heure entre 08:00 - 11:30 ou 14:00 -
+                    17:00.
+                  </div>
+                </div>
               </div>
-              
             </div>
 
             <div class="form-group mt-3">
               <textarea
                 class="form-control"
-                name="message"
+                formControlName="message"
                 rows="5"
                 placeholder="Message (Optional)"
               ></textarea>
             </div>
+
             <div class="mt-3">
               <div class="loading">Chargement...</div>
               <div class="error-message"></div>
@@ -551,7 +591,9 @@
                 Votre demande de rendez-vous a bien été envoyée. Merci !
               </div>
               <div class="text-center">
-                <button type="submit">Prendre un Rendez-vous</button>
+                <button type="submit" [disabled]="appointmentForm.invalid">
+                  Prendre un Rendez-vous
+                </button>
               </div>
             </div>
           </form>
@@ -559,302 +601,283 @@
       </section>
       <!-- /Appointment Section -->
 
-      <!-- Testimonials Section -->
+      <!-- Section Témoignages -->
       <section id="testimonials" class="testimonials section">
-        <!-- Section Title -->
+        <!-- Titre de la section -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Ce que disent nos patients</h2>
+          <p>
+            Découvrez les témoignages de nos patients satisfaits qui ont
+            bénéficié des soins du Dr. [Nom du Docteur].
+          </p>
+        </div>
+        <!-- Fin du titre de la section -->
 
-        <!-- End Section Title -->
-
-        <!-- Section Témoignages -->
-        <section id="testimonials" class="testimonials section">
-          <!-- Titre de la section -->
-          <div class="container section-title" data-aos="fade-up">
-            <h2>Ce que disent nos patients</h2>
-            <p>
-              Découvrez les témoignages de nos patients satisfaits qui ont
-              bénéficié des soins du Dr. [Nom du Docteur].
-            </p>
-          </div>
-          <!-- Fin du titre de la section -->
-
-          <div class="container" data-aos="fade-up" data-aos-delay="100">
-            <div
-              class="swiper init-swiper"
-              data-speed="600"
-              data-delay="5000"
-              data-breakpoints='{ "320": { "slidesPerView": 1, "spaceBetween": 40 }, "1200": { "slidesPerView": 3, "spaceBetween": 40 } }'
-            >
-              <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div
+            class="swiper init-swiper"
+            data-speed="600"
+            data-delay="5000"
+            data-breakpoints='{ "320": { "slidesPerView": 1, "spaceBetween": 40 }, "1200": { "slidesPerView": 3, "spaceBetween": 40 } }'
+          >
+            <script type="application/json" class="swiper-config">
+              {
+                "loop": true,
+                "speed": 600,
+                "autoplay": {
+                  "delay": 5000
+                },
+                "slidesPerView": "auto",
+                "pagination": {
+                  "el": ".swiper-pagination",
+                  "type": "bullets",
+                  "clickable": true
+                },
+                "breakpoints": {
+                  "320": {
+                    "slidesPerView": 1,
+                    "spaceBetween": 40
                   },
-                  "slidesPerView": "auto",
-                  "pagination": {
-                    "el": ".swiper-pagination",
-                    "type": "bullets",
-                    "clickable": true
-                  },
-                  "breakpoints": {
-                    "320": {
-                      "slidesPerView": 1,
-                      "spaceBetween": 40
-                    },
-                    "1200": {
-                      "slidesPerView": 3,
-                      "spaceBetween": 20
-                    }
+                  "1200": {
+                    "slidesPerView": 3,
+                    "spaceBetween": 20
                   }
                 }
-              </script>
-              <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                  <div class="testimonial-item">
-                    <p>
-                      <i class="bi bi-quote quote-icon-left"></i>
-                      <span>
-                        Le Dr. [Nom] est un professionnel exceptionnel ! Grâce à
-                        lui, j'ai retrouvé la santé rapidement. Son écoute et
-                        son expertise sont remarquables.
-                      </span>
-                      <i class="bi bi-quote quote-icon-right"></i>
-                    </p>
-                    <img
-                      src="img/patients/patient1.png"
-                      class="testimonial-img"
-                      alt="Patient 1"
-                    />
-                    <h3>Marie Dupont</h3>
-                    <h4>Patiente</h4>
-                  </div>
-                </div>
-                <!-- Fin du témoignage -->
-
-                <div class="swiper-slide">
-                  <div class="testimonial-item">
-                    <p>
-                      <i class="bi bi-quote quote-icon-left"></i>
-                      <span>
-                        Un excellent médecin qui prend le temps d'expliquer et
-                        de rassurer ses patients. Merci pour votre dévouement !
-                      </span>
-                      <i class="bi bi-quote quote-icon-right"></i>
-                    </p>
-                    <img
-                      src="img/patients/patient2.png"
-                      class="testimonial-img"
-                      alt="Patient 2"
-                    />
-                    <h3>Jean Martin</h3>
-                    <h4>Patient</h4>
-                  </div>
-                </div>
-                <!-- Fin du témoignage -->
-
-                <div class="swiper-slide">
-                  <div class="testimonial-item">
-                    <p>
-                      <i class="bi bi-quote quote-icon-left"></i>
-                      <span>
-                        Je recommande vivement le Dr. [Nom]. Son
-                        professionnalisme et sa gentillesse font toute la
-                        différence. Un grand merci !
-                      </span>
-                      <i class="bi bi-quote quote-icon-right"></i>
-                    </p>
-                    <img
-                      src="img/patients/patient3.png"
-                      class="testimonial-img"
-                      alt="Patient 3"
-                    />
-                    <h3>Sophie Bernard</h3>
-                    <h4>Patiente</h4>
-                  </div>
-                </div>
-                <!-- Fin du témoignage -->
-              </div>
-              <div class="swiper-pagination"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Contact Section -->
-        <!-- Contact Section -->
-        <section id="contact" class="contact section">
-          <!-- Section Title -->
-          <div class="container section-title" data-aos="fade-up">
-            <h2>Contact</h2>
-            <p>Vous pouvez nous contacter via les informations ci-dessous.</p>
-          </div>
-          <!-- End Section Title -->
-
-          <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
-            <iframe
-              style="border: 0; width: 100%; height: 370px"
-              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3356.758351839832!2d10.6346!3d35.8288!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x130213a7bc8fd4d1%3A0x6c8e88a67e38c91e!2sSousse%20Tower!5e0!3m2!1sfr!2stn!4v1710000000000!5m2!1sfr!2stn"
-              frameborder="0"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-          <!-- End Google Maps -->
-
-          <div class="container" data-aos="fade-up" data-aos-delay="100">
-            <div class="row gy-4">
-              <div class="col-lg-6">
-                <div class="row gy-4">
-                  <div class="col-lg-12">
-                    <div
-                      class="info-item d-flex flex-column justify-content-center align-items-center"
-                      data-aos="fade-up"
-                      data-aos-delay="200"
-                    >
-                      <i class="bi bi-geo-alt"></i>
-                      <h3>Adresse</h3>
-                      <p>
-                        Rue commandant Bjeoui, Imm Sousse Tower bloc B, Sousse
-                        mdina 4000
-                      </p>
-                    </div>
-                  </div>
-                  <!-- End Info Item -->
-
-                  <div class="col-md-6">
-                    <div
-                      class="info-item d-flex flex-column justify-content-center align-items-center"
-                      data-aos="fade-up"
-                      data-aos-delay="300"
-                    >
-                      <i class="bi bi-telephone"></i>
-                      <h3>Appelez-nous</h3>
-                      <p>+216 98 297 271</p>
-                    </div>
-                  </div>
-                  <!-- End Info Item -->
-
-                  <div class="col-md-6">
-                    <div
-                      class="info-item d-flex flex-column justify-content-center align-items-center"
-                      data-aos="fade-up"
-                      data-aos-delay="400"
-                    >
-                      <i class="bi bi-envelope"></i>
-                      <h3>Email</h3>
-                      <p>contact.atvotreentreprise.com</p>
-                    </div>
-                  </div>
-                  <!-- End Info Item -->
+              }
+            </script>
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="testimonial-item">
+                  <p>
+                    <i class="bi bi-quote quote-icon-left"></i>
+                    <span>
+                      Le Dr. [Nom] est un professionnel exceptionnel ! Grâce à
+                      lui, j'ai retrouvé la santé rapidement. Son écoute et son
+                      expertise sont remarquables.
+                    </span>
+                    <i class="bi bi-quote quote-icon-right"></i>
+                  </p>
+                  <img
+                    src="img/patients/patient1.png"
+                    class="testimonial-img"
+                    alt="Patient 1"
+                  />
+                  <h3>Marie Dupont</h3>
+                  <h4>Patiente</h4>
                 </div>
               </div>
+              <!-- Fin du témoignage -->
 
-              <div class="col-lg-6">
-                <form
-                  action="forms/contact.php"
-                  method="post"
-                  class="php-email-form"
-                  data-aos="fade-up"
-                  data-aos-delay="500"
-                >
-                  <div class="row gy-4">
-                    <div class="col-md-6">
-                      <input
-                        type="text"
-                        name="name"
-                        class="form-control"
-                        placeholder="Votre Nom"
-                        required=""
-                      />
-                    </div>
-
-                    <div class="col-md-6">
-                      <input
-                        type="email"
-                        class="form-control"
-                        name="email"
-                        placeholder="Votre Email"
-                        required=""
-                      />
-                    </div>
-
-                    <div class="col-md-12">
-                      <input
-                        type="text"
-                        class="form-control"
-                        name="subject"
-                        placeholder="Sujet"
-                        required=""
-                      />
-                    </div>
-
-                    <div class="col-md-12">
-                      <textarea
-                        class="form-control"
-                        name="message"
-                        rows="4"
-                        placeholder="Message"
-                        required=""
-                      ></textarea>
-                    </div>
-
-                    <div class="col-md-12 text-center">
-                      <div class="loading">Envoi en cours...</div>
-                      <div class="error-message"></div>
-                      <div class="sent-message">
-                        Votre message a été envoyé. Merci !
-                      </div>
-
-                      <button type="submit">Envoyer le message</button>
-                    </div>
-                  </div>
-                </form>
+              <div class="swiper-slide">
+                <div class="testimonial-item">
+                  <p>
+                    <i class="bi bi-quote quote-icon-left"></i>
+                    <span>
+                      Un excellent médecin qui prend le temps d'expliquer et de
+                      rassurer ses patients. Merci pour votre dévouement !
+                    </span>
+                    <i class="bi bi-quote quote-icon-right"></i>
+                  </p>
+                  <img
+                    src="img/patients/patient2.png"
+                    class="testimonial-img"
+                    alt="Patient 2"
+                  />
+                  <h3>Jean Martin</h3>
+                  <h4>Patient</h4>
+                </div>
               </div>
-              <!-- End Contact Form -->
+              <!-- Fin du témoignage -->
+
+              <div class="swiper-slide">
+                <div class="testimonial-item">
+                  <p>
+                    <i class="bi bi-quote quote-icon-left"></i>
+                    <span>
+                      Je recommande vivement le Dr. [Nom]. Son professionnalisme
+                      et sa gentillesse font toute la différence. Un grand merci
+                      !
+                    </span>
+                    <i class="bi bi-quote quote-icon-right"></i>
+                  </p>
+                  <img
+                    src="img/patients/patient3.png"
+                    class="testimonial-img"
+                    alt="Patient 3"
+                  />
+                  <h3>Sophie Bernard</h3>
+                  <h4>Patiente</h4>
+                </div>
+              </div>
+              <!-- Fin du témoignage -->
             </div>
+            <div class="swiper-pagination"></div>
           </div>
-        </section>
-        <!-- /Contact Section -->
-
-        <footer id="footer" class="footer light-background">
-          <div class="container copyright text-center mt-4">
-            <p>
-              © <span>Copyright</span>
-              <strong class="px-1 sitename">Cabident</strong>
-              <span>All Rights Reserved</span>
-            </p>
-            <div class="credits">
-              <!-- All the links in the footer should remain intact. -->
-              <!-- You can delete the links only if you've purchased the pro version. -->
-              <!-- Licensing information: https://bootstrapmade.com/license/ -->
-              <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-              Designed by benDhia Malek
-            </div>
-          </div>
-        </footer>
-
-        <!-- Scroll Top -->
-        <a
-          href="#"
-          id="scroll-top"
-          class="scroll-top d-flex align-items-center justify-content-center"
-          ><i class="bi bi-arrow-up-short"></i
-        ></a>
-
-        <!-- Preloader -->
-        <div id="preloader"></div>
-
-        <!-- Vendor JS Files -->
-        <!--<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/php-email-form/validate.js"></script>
-        <script src="vendor/aos/aos.js"></script>
-        <script src="vendor/glightbox/js/glightbox.min.js"></script>
-        <script src="vendor/purecounter/purecounter_vanilla.js"></script>
-        <script src="vendor/swiper/swiper-bundle.min.js"></script>
-
-        <script src="assets/js/main.js"></script>-->
+        </div>
       </section>
+
+      <!-- Contact Section -->
+      <!-- Contact Section -->
+      <section id="contact" class="contact section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Contact</h2>
+          <p>Vous pouvez nous contacter via les informations ci-dessous.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
+          <iframe
+            style="border: 0; width: 100%; height: 370px"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3356.758351839832!2d10.6346!3d35.8288!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x130213a7bc8fd4d1%3A0x6c8e88a67e38c91e!2sRue%20commandant%20Bjeoui%2C%20Imm%20Sousse%20Tower%20bloc%20B%2C%20Sousse%20mdina%204000!5e0!3m2!1sfr!2stn!4v1710000000000!5m2!1sfr!2stn"
+            frameborder="0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+
+        <!-- End Google Maps -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row gy-4">
+            <div class="col-lg-6">
+              <div class="row gy-4">
+                <div class="col-lg-12">
+                  <div
+                    class="info-item d-flex flex-column justify-content-center align-items-center"
+                    data-aos="fade-up"
+                    data-aos-delay="200"
+                  >
+                    <i class="bi bi-geo-alt"></i>
+                    <h3>Adresse</h3>
+                    <p>
+                      Rue commandant Bjeoui, Imm Sousse Tower bloc B, Sousse
+                      mdina 4000
+                    </p>
+                  </div>
+                </div>
+                <!-- End Info Item -->
+
+                <div class="col-md-6">
+                  <div
+                    class="info-item d-flex flex-column justify-content-center align-items-center"
+                    data-aos="fade-up"
+                    data-aos-delay="300"
+                  >
+                    <i class="bi bi-telephone"></i>
+                    <h3>Appelez-nous</h3>
+                    <p>+216 98 297 271</p>
+                  </div>
+                </div>
+                <!-- End Info Item -->
+
+                <div class="col-md-6">
+                  <div
+                    class="info-item d-flex flex-column justify-content-center align-items-center"
+                    data-aos="fade-up"
+                    data-aos-delay="400"
+                  >
+                    <i class="bi bi-envelope"></i>
+                    <h3>Email</h3>
+                    <p>contact.atvotreentreprise.com</p>
+                  </div>
+                </div>
+                <!-- End Info Item -->
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <form
+                action="forms/contact.php"
+                method="post"
+                class="php-email-form"
+                data-aos="fade-up"
+                data-aos-delay="500"
+              >
+                <div class="row gy-4">
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      name="name"
+                      class="form-control"
+                      placeholder="Votre Nom"
+                      required=""
+                    />
+                  </div>
+
+                  <div class="col-md-6">
+                    <input
+                      type="email"
+                      class="form-control"
+                      name="email"
+                      placeholder="Votre Email"
+                      required=""
+                    />
+                  </div>
+
+                  <div class="col-md-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="subject"
+                      placeholder="Sujet"
+                      required=""
+                    />
+                  </div>
+
+                  <div class="col-md-12">
+                    <textarea
+                      class="form-control"
+                      name="message"
+                      rows="4"
+                      placeholder="Message"
+                      required=""
+                    ></textarea>
+                  </div>
+
+                  <div class="col-md-12 text-center">
+                    <div class="loading">Envoi en cours...</div>
+                    <div class="error-message"></div>
+                    <div class="sent-message">
+                      Votre message a été envoyé. Merci !
+                    </div>
+
+                    <button type="submit">Envoyer le message</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- End Contact Form -->
+          </div>
+        </div>
+      </section>
+      <!-- /Contact Section -->
+
+      <footer id="footer" class="footer light-background">
+        <div class="container copyright text-center mt-4">
+          <p>
+            © <span>Copyright</span>
+            <strong class="px-1 sitename">Cabident</strong>
+            <span>All Rights Reserved</span>
+          </p>
+          <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you've purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+            Designed by benDhia Malek
+          </div>
+        </div>
+      </footer>
+
+      <!-- Scroll Top -->
+      <a
+        href="#"
+        id="scroll-top"
+        class="scroll-top d-flex align-items-center justify-content-center"
+        ><i class="bi bi-arrow-up-short"></i
+      ></a>
     </main>
   </body>
 </html>
