@@ -6,7 +6,7 @@ import { RendezVousService } from '../../services/rendez-vous.service';
 import { PatientService } from '../../services/patient.service';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
-import { of } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { CalendarService } from '../../services/calendar.service';
 
@@ -47,6 +47,9 @@ export class AppointmentDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupPatientSearch();
+    this.calendarService.openDialog.subscribe(date => {
+      this.openModal(date);
+    });
   }
 
   private createForm(): FormGroup {
@@ -55,10 +58,10 @@ export class AppointmentDialogComponent implements OnInit {
       heure: [this.formatTime(this.selectedDate), Validators.required],
       patientSearch: [''],
       patientId: ['', Validators.required],
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
+      nom: ['', [Validators.required]],
+      prenom: ['', [Validators.required]],
       telephone: ['', [Validators.required, Validators.pattern(/^([259347]{1}[0-9]{7})$/)]],
-      email: ['', Validators.email],
+      email: ['', [Validators.email]],
       duree: [30, [Validators.required, Validators.min(15), Validators.max(120)]],
       notes: ['']
     });
@@ -114,6 +117,7 @@ export class AppointmentDialogComponent implements OnInit {
 
   closeModal(): void {
     $('#appointmentModal').modal('hide');
+    document.body.focus();
   }
 
   private resetForm(): void {
@@ -149,64 +153,93 @@ export class AppointmentDialogComponent implements OnInit {
 
   togglePatientForm(): void {
     this.showPatientForm = !this.showPatientForm;
-    this.isPatientFound = false;
-    this.filteredPatients = [];
     
+    const patientIdControl = this.appointmentForm.get('patientId');
     const patientSearchControl = this.appointmentForm.get('patientSearch');
-    if (patientSearchControl) {
-      this.showPatientForm ? patientSearchControl.disable() : patientSearchControl.enable();
-    }
-
+    
     if (this.showPatientForm) {
+      patientIdControl?.setValue('new');
+      patientSearchControl?.disable();
+      // Réinitialise les champs patient
       this.appointmentForm.patchValue({
-        patientId: 'new',
         nom: '',
         prenom: '',
         telephone: '',
         email: ''
       });
+    } else {
+      patientIdControl?.setValue('');
+      patientSearchControl?.enable();
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.appointmentForm.invalid) {
       this.markFormGroupTouched(this.appointmentForm);
       return;
     }
   
-    this.isSubmitting = true;
     const formValue = this.appointmentForm.value;
-
+    const [hours, minutes] = formValue.heure.split(':');
+    const appointmentDate = new Date(this.selectedDate);
+    appointmentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+  
+    // Vérifications
+    if (this.calendarService.isDateInPast(appointmentDate)) {
+      alert('Impossible de prendre un rendez-vous dans le passé !');
+      return;
+    }
+  
+    if (!this.calendarService.isWithinBusinessHours(appointmentDate)) {
+      alert('Hors des heures de travail !');
+      return;
+    }
+  
+    if (!this.calendarService.isSlotAvailable(appointmentDate, formValue.duree)) {
+      alert('Ce créneau chevauche un rendez-vous existant !');
+      return;
+    }
+  
+    this.isSubmitting = true;
+  
     try {
-      const [hours, minutes] = formValue.heure.split(':');
-      const appointmentDate = new Date(this.selectedDate);
-      appointmentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-
-      // Si c'est un nouveau patient, il faut d'abord le créer
       if (formValue.patientId === 'new') {
         const newPatient: Omit<Patient, 'id' | 'dateCreation'> = {
           nom: formValue.nom,
           prenom: formValue.prenom,
           telephone: formValue.telephone,
-          email: formValue.email || undefined
+          email: formValue.email || null
         };
-
-        this.patientService.addPatient(newPatient).subscribe({
-          next: (patientId) => {
-            this.createAppointment(appointmentDate, formValue, patientId);
-          },
-          error: (error) => {
-            console.error('Erreur lors de la création du patient:', error);
-            this.isSubmitting = false;
-          }
-        });
+  
+        const patientId = await lastValueFrom(
+          this.patientService.addPatient(newPatient)
+        );
+        await this.createAppointment(appointmentDate, formValue, patientId);
       } else {
-        this.createAppointment(appointmentDate, formValue, formValue.patientId);
+        await this.createAppointment(appointmentDate, formValue, formValue.patientId);
       }
+  
+      this.closeModal();
+      this.calendarService.triggerRefresh();
     } catch (error) {
-      console.error('Erreur lors de la création du rendez-vous:', error);
+      console.error('Erreur:', error);
+    } finally {
       this.isSubmitting = false;
     }
+  }
+  
+  private validatePatientFields(formValue: any): boolean {
+    const requiredFields = ['nom', 'prenom', 'telephone'];
+    let isValid = true;
+  
+    for (const field of requiredFields) {
+      if (!formValue[field]) {
+        this.appointmentForm.get(field)?.markAsTouched();
+        isValid = false;
+      }
+    }
+  
+    return isValid;
   }
 
   private createAppointment(appointmentDate: Date, formValue: any, patientId: string): void {
@@ -226,7 +259,7 @@ export class AppointmentDialogComponent implements OnInit {
 
     this.rdvService.addRendezVous(newRdv).then(() => {
       this.closeModal();
-      this.calendarService.triggerRefreshCalendar();
+      this.calendarService.triggerRefresh();
       this.isSubmitting = false;
       console.log("rendezVous added successfully !")
     }).catch((error) => {

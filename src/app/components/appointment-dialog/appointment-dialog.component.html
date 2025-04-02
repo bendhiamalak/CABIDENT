@@ -122,58 +122,56 @@
       
 
           <!-- Formulaire Patient (visible quand showPatientForm = true) -->
-          <div class="card mb-3" *ngIf="showPatientForm">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
-              <h6 class="mb-0">Nouveau Patient</h6>
-              <button
-                type="button"
-                class="btn btn-sm btn-outline-secondary"
-                (click)="togglePatientForm()"
-              >
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            <div class="card-body">
-              <div class="form-row">
-                <div class="col-md-6 form-group">
-                  <label>Nom</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="nom"
-                  />
-                </div>
-                <div class="col-md-6 form-group">
-                  <label>Prénom</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="prenom"
-                  />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-6 form-group">
-                  <label>Téléphone</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="telephone"
-                  />
-                </div>
-                <div class="col-md-6 form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    formControlName="email"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- Formulaire Patient intégré -->
+<div class="card mb-3" *ngIf="showPatientForm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0">Nouveau Patient</h6>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="togglePatientForm()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="form-row">
+      <div class="col-md-6 form-group">
+        <label>Nom *</label>
+        <input type="text" class="form-control" formControlName="nom"
+               [class.is-invalid]="appointmentForm.get('nom')?.invalid && appointmentForm.get('nom')?.touched">
+        <div *ngIf="appointmentForm.get('nom')?.invalid && appointmentForm.get('nom')?.touched" class="invalid-feedback">
+          Le nom est obligatoire
+        </div>
+      </div>
+      <div class="col-md-6 form-group">
+        <label>Prénom *</label>
+        <input type="text" class="form-control" formControlName="prenom"
+               [class.is-invalid]="appointmentForm.get('prenom')?.invalid && appointmentForm.get('prenom')?.touched">
+        <div *ngIf="appointmentForm.get('prenom')?.invalid && appointmentForm.get('prenom')?.touched" class="invalid-feedback">
+          Le prénom est obligatoire
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 form-group">
+        <label>Téléphone *</label>
+        <input type="text" class="form-control" formControlName="telephone"
+               [class.is-invalid]="appointmentForm.get('telephone')?.invalid && appointmentForm.get('telephone')?.touched">
+        <div *ngIf="appointmentForm.get('telephone')?.errors?.['required']" class="invalid-feedback">
+          Le téléphone est obligatoire
+        </div>
+        <div *ngIf="appointmentForm.get('telephone')?.errors?.['pattern']" class="invalid-feedback">
+          Format invalide (8 chiffres commençant par 2, 3, 4, 5, 7 ou 9)
+        </div>
+      </div>
+      <div class="col-md-6 form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" formControlName="email"
+               [class.is-invalid]="appointmentForm.get('email')?.invalid && appointmentForm.get('email')?.touched">
+        <div *ngIf="appointmentForm.get('email')?.errors?.['email']" class="invalid-feedback">
+          Format d'email invalide
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
           <!-- Détails du rendez-vous -->
 
