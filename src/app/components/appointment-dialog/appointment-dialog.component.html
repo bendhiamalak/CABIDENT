@@ -1,0 +1,222 @@
+<div
+  class="modal fade"
+  id="appointmentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="appointmentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="appointmentModalLabel">
+          Nouveau Rendez-vous
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="appointmentForm">
+          <!-- Date et Heure -->
+          <div class="form-row mb-3">
+            <div class="col-md-6">
+              <label>Date</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="date"
+                readonly
+              />
+            </div>
+            <div class="col-md-6">
+              <label>Heure</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="heure"
+                readonly
+              />
+            </div>
+          </div>
+
+          <!-- Recherche Patient -->
+          <div class="form-group" *ngIf="!showPatientForm">
+            <label>Rechercher un patient</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="patientSearch"
+                (keyup)="searchPatients()"
+                placeholder="Nom, prénom ou téléphone"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="togglePatientForm()"
+                >
+                  <i class="fas fa-user-plus"></i> Nouveau
+                </button>
+              </div>
+            </div>
+
+            <!-- Liste des patients -->
+            <div class="list-group mt-2" *ngIf="filteredPatients.length">
+              <!--<a
+                href="#"
+                class="list-group-item list-group-item-action"
+                *ngFor="let patient of filteredPatients"
+                (click)="selectPatient(patient)"
+              >
+                {{ patient.prenom }} {{ patient.nom }} - {{ patient.telephone }}
+              </a>-->
+              <div
+                class="list-group-item list-group-item-action"
+                *ngFor="let patient of filteredPatients"
+                (click)="selectPatient(patient)"
+                style="cursor: pointer"
+              >
+                {{ patient.prenom }} {{ patient.nom }} - {{ patient.telephone }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Affichez les infos patient seulement si un patient est trouvé ET qu'on n'est pas en mode création -->
+          <div class="card mb-3" *ngIf="isPatientFound && !showPatientForm">
+            <div class="card-header">
+              <h6 class="mb-0">Patient sélectionné</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    <strong>Nom:</strong>
+                    {{ appointmentForm.get("nom")?.value }}
+                  </p>
+                  <p>
+                    <strong>Prénom:</strong>
+                    {{ appointmentForm.get("prenom")?.value }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong>Téléphone:</strong>
+                    {{ appointmentForm.get("telephone")?.value }}
+                  </p>
+                  <p>
+                    <strong>Email:</strong>
+                    {{ appointmentForm.get("email")?.value || "Non renseigné" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      
+
+          <!-- Formulaire Patient (visible quand showPatientForm = true) -->
+          <div class="card mb-3" *ngIf="showPatientForm">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h6 class="mb-0">Nouveau Patient</h6>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary"
+                (click)="togglePatientForm()"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="col-md-6 form-group">
+                  <label>Nom</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="nom"
+                  />
+                </div>
+                <div class="col-md-6 form-group">
+                  <label>Prénom</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="prenom"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md-6 form-group">
+                  <label>Téléphone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="telephone"
+                  />
+                </div>
+                <div class="col-md-6 form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    formControlName="email"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Détails du rendez-vous -->
+
+          <div class="form-row">
+            <div class="col-md-6 form-group">
+              <label>Durée (minutes)</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="duree"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              formControlName="notes"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onSubmit()"
+          [disabled]="isSubmitting || appointmentForm.invalid"
+        >
+          <span
+            *ngIf="isSubmitting"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          {{ isSubmitting ? "Enregistrement..." : "Enregistrer" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

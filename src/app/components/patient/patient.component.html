@@ -1,95 +1,338 @@
-<div class="container">
-  <h1>Gestion des Patients</h1>
+<!-- Navbar de recherche et ajout -->
+<nav class="navbar navbar-expand-lg bg-primary mb-4" data-bs-theme="dark">
+  <div class="container-fluid">
+    <div class="d-flex w-100 justify-content-between">
+      <!-- Barre de recherche -->
+      <form class="d-flex me-auto w-50">
+        <div class="input-group">
+          <input
+            class="form-control"
+            type="search"
+            placeholder="Rechercher un patient..."
+            [(ngModel)]="searchTerm"
+            name="search"
+            (input)="filterPatients()"
+          />
+          <button class="btn btn-light" type="button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
 
-  <!-- Formulaire pour ajouter un patient -->
-  <div class="form-section">
-    <h2>Ajouter un Patient</h2>
-    <form (ngSubmit)="addPatient()">
-      <div>
-        <label for="nom">Nom:</label>
-        <input id="nom" [(ngModel)]="newPatient.nom" name="nom" required />
-      </div>
-      <div>
-        <label for="prenom">Prénom:</label>
-        <input
-          id="prenom"
-          [(ngModel)]="newPatient.prenom"
-          name="prenom"
-          required
-        />
-      </div>
-      <div>
-        <label for="telephone">Téléphone:</label>
-        <input
-          id="telephone"
-          [(ngModel)]="newPatient.telephone"
-          name="telephone"
-          required
-        />
-      </div>
-      <button type="submit">Ajouter</button>
-    </form>
+      <!-- Bouton Ajouter -->
+      <button class="btn btn-light" (click)="openAddPatientModal()">
+        <i class="fas fa-plus me-2"></i>Ajouter un patient
+      </button>
+    </div>
   </div>
+</nav>
 
-  <!-- Formulaire pour mettre à jour un patient -->
-  <div class="form-section" *ngIf="selectedPatient">
-    <h2>Modifier un Patient</h2>
-    <form (ngSubmit)="updatePatient()">
-      <div>
-        <label for="update-nom">Nom:</label>
-        <input
-          id="update-nom"
-          [(ngModel)]="selectedPatient.nom"
-          name="nom"
-          required
-        />
-      </div>
-      <div>
-        <label for="update-prenom">Prénom:</label>
-        <input
-          id="update-prenom"
-          [(ngModel)]="selectedPatient.prenom"
-          name="prenom"
-          required
-        />
-      </div>
-      <div>
-        <label for="update-telephone">Téléphone:</label>
-        <input
-          id="update-telephone"
-          [(ngModel)]="selectedPatient.telephone"
-          name="telephone"
-          required
-        />
-      </div>
-      <button type="submit">Mettre à jour</button>
-      <button type="button" (click)="selectedPatient = null">Annuler</button>
-    </form>
+<!-- Liste des patients -->
+<div class="card shadow-sm">
+  <div class="card-header bg-light">
+    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Liste des Patients</h5>
   </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th width="25%">Nom</th>
+            <th width="25%">Prénom</th>
+            <th width="20%">Téléphone</th>
+            <th width="30%" class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of filteredPatients">
+            <td>{{ patient.nom }}</td>
+            <td>{{ patient.prenom }}</td>
+            <td>{{ patient.telephone }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-info me-2">
+                <i class="fas fa-calendar-check me-1"></i>Consultations
+              </button>
+              <button
+                class="btn btn-sm btn-warning me-2"
+                (click)="editPatient(patient)"
+              >
+                <i class="fas fa-edit me-1"></i>Modifier
+              </button>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="confirmDelete(patient.id!)"
+              >
+                <i class="fas fa-trash-alt me-1"></i>Supprimer
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredPatients.length === 0">
+            <td colspan="4" class="text-center text-muted py-4">
+              Aucun patient trouvé
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-  <!-- Liste des patients -->
-  <div class="list-section">
-    <h2>Liste des Patients</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Téléphone</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let patient of patients">
-          <td>{{ patient.nom }}</td>
-          <td>{{ patient.prenom }}</td>
-          <td>{{ patient.telephone }}</td>
-          <td>
-            <button (click)="selectPatient(patient)">Modifier</button>
-            <button (click)="deletePatient(patient.id!)">Supprimer</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-3">
+  <div class="text-muted">
+    Affichage de {{ filteredPatients.length }} sur
+    {{ patients.length }} patients
+  </div>
+  <nav>
+    <ul class="pagination pagination-sm">
+      <li class="page-item disabled">
+        <a class="page-link" href="#">Précédent</a>
+      </li>
+      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Suivant</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div
+  class="modal fade"
+  id="confirmDeleteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">
+          Confirmer la suppression
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir supprimer définitivement ce patient ?</p>
+        <p class="font-weight-bold">Cette action est irréversible.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="deletePatient()"
+        >
+          Confirmer la suppression
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'ajout/modification de patient -->
+<div
+  class="modal fade"
+  id="patientModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="patientModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="patientModalLabel">
+          {{ isEditMode ? "Modifier Patient" : "Ajouter Patient" }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="resetForm()"
+        >
+          <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="patientForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="nom">Nom *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nom"
+                  formControlName="nom"
+                  [class.is-invalid]="
+                    patientForm.get('nom')?.invalid &&
+                    patientForm.get('nom')?.touched
+                  "
+                />
+                <div
+                  *ngIf="
+                    patientForm.get('nom')?.invalid &&
+                    patientForm.get('nom')?.touched
+                  "
+                  class="invalid-feedback"
+                >
+                  Le nom est obligatoire
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="prenom">Prénom *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="prenom"
+                  formControlName="prenom"
+                  [class.is-invalid]="
+                    patientForm.get('prenom')?.invalid &&
+                    patientForm.get('prenom')?.touched
+                  "
+                />
+                <div
+                  *ngIf="
+                    patientForm.get('prenom')?.invalid &&
+                    patientForm.get('prenom')?.touched
+                  "
+                  class="invalid-feedback"
+                >
+                  Le prénom est obligatoire
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="telephone">Téléphone *</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="telephone"
+                  formControlName="telephone"
+                  [class.is-invalid]="
+                    patientForm.get('telephone')?.invalid &&
+                    patientForm.get('telephone')?.touched
+                  "
+                />
+                <div
+                  *ngIf="patientForm.get('telephone')?.errors?.['required'] && patientForm.get('telephone')?.touched"
+                  class="invalid-feedback"
+                >
+                  Le téléphone est obligatoire
+                </div>
+                <div
+                  *ngIf="patientForm.get('telephone')?.errors?.['pattern']"
+                  class="invalid-feedback"
+                >
+                  Format invalide
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  [class.is-invalid]="
+                    patientForm.get('email')?.invalid &&
+                    patientForm.get('email')?.touched
+                  "
+                />
+                <div
+                  *ngIf="patientForm.get('email')?.errors?.['email']"
+                  class="invalid-feedback"
+                >
+                  Format d'email invalide
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dateNaissance">Date de naissance *</label>
+            <input
+              type="date"
+              class="form-control"
+              id="dateNaissance"
+              formControlName="dateNaissance"
+              [class.is-invalid]="
+                patientForm.get('dateNaissance')?.invalid &&
+                patientForm.get('dateNaissance')?.touched
+              "
+            />
+            <div
+              *ngIf="
+                patientForm.get('dateNaissance')?.invalid &&
+                patientForm.get('dateNaissance')?.touched
+              "
+              class="invalid-feedback"
+            >
+              dateNaissance est obligatoire
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <textarea
+              class="form-control"
+              id="adresse"
+              formControlName="adresse"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea
+              class="form-control"
+              id="notes"
+              formControlName="notes"
+              rows="3"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="resetForm()"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="isEditMode ? updatePatient() : addPatient()"
+          [disabled]="patientForm.invalid"
+        >
+          {{ isEditMode ? "Enregistrer" : "Ajouter" }}
+        </button>
+      </div>
+    </div>
   </div>
 </div>

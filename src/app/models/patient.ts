@@ -1,12 +1,12 @@
 
 
 export interface Patient {
-    id?: string;
+  id?: string;
   nom: string;
   prenom: string;
   telephone: string;
   email?: string;
-  dateNaissance?: string; // Format 'YYYY-MM-DD' pour faciliter le stockage et la manipulation
+  dateNaissance?: string; // Format 'jj/mm/aaaa' pour faciliter le stockage et la manipulation
   adresse?: string;
   notes?: string;
   dateCreation: Date;

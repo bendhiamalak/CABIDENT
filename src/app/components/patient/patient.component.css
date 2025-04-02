@@ -1,0 +1,38 @@
+:host {
+    display: block;
+    width: 100%;
+  }
+  
+  /* Force les éléments à prendre toute la largeur */
+  .card, .navbar, .table-responsive {
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+  }
+
+  /* Pour les boutons d'action */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Espacement supplémentaire si nécessaire */
+  .gap-2 {
+    gap: 0.5rem;
+  }
+
+  /* Style pour le modal de confirmation */
+#confirmDeleteModal .modal-header {
+    padding: 1rem;
+  }
+  
+  #confirmDeleteModal .modal-body {
+    padding: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  #confirmDeleteModal .modal-footer {
+    padding: 1rem;
+  }

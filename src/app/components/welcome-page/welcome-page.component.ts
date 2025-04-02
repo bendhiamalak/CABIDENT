@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RendezVous } from '../../models/rendez-vous';
 import { RendezVousService } from '../../services/rendez-vous.service';
 import { StatutRendezVous } from '../../models/rendez-vous';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-welcome-page',
   standalone: true,
@@ -15,7 +16,7 @@ export class WelcomePageComponent  implements OnInit {
   appointmentForm!: FormGroup;
   rendezVous!:RendezVous
 
-  constructor(private fb: FormBuilder, private rendezVousService: RendezVousService) {}
+  constructor(private fb: FormBuilder, private rendezVousService: RendezVousService , private router: Router) { }
 
   ngOnInit(): void {
     this.appointmentForm = this.fb.group({
@@ -76,15 +77,14 @@ export class WelcomePageComponent  implements OnInit {
         telephone: formData.telephone,
         email: formData.email,
         date: new Date(formData.date + 'T' + formData.heure), // Fusion de la date et de l'heure
-        duree: 30, 
-        motif: 'Consultation', 
+        duree: 120,  
         message: formData.message,
         statut: StatutRendezVous.EN_ATTENTE,
         rappelEnvoye: false,
         confirmationEnvoyee: false,
         dateCreation: new Date()
       };
-
+ 
       this.rendezVousService.addRendezVous(rendezVous)
         .then(() => {
           console.log(' Rendez-vous enregistré avec succès !');
@@ -94,5 +94,9 @@ export class WelcomePageComponent  implements OnInit {
     } else {
       console.log('Formulaire invalide');
     }
+  }
+
+  goToLogin(){
+    this.router.navigate(['/login']);
   }
 }

@@ -1,0 +1,71 @@
+<!-- Sidebar -->
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header d-flex justify-content-between align-items-center">
+    <div *ngIf="!isCollapsed" class="mb-0">
+      <img src="img/logoCab.png" alt="Logo du cabinet" style="width: 120px" />
+    </div>
+    <button
+      class="btn btn-link toggle-btn"
+      (click)="toggleSidebar()"
+      title="Réduire/Étendre le menu"
+    >
+      <i
+        class="fas"
+        [class.fa-chevron-left]="!isCollapsed"
+        [class.fa-chevron-right]="isCollapsed"
+      ></i>
+    </button>
+  </div>
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeItem === 'accueil'"
+        title="Accueil"
+        (click)="setActiveAndNavigate('accueil', 'accueil')"
+      >
+        <i class="fas fa-home"></i>
+        <span *ngIf="!isCollapsed">Accueil</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeItem === 'patients'"
+        title="Patients"
+        (click)="setActiveAndNavigate('patients', 'patients')"
+      >
+        <i class="fas fa-procedures"></i>
+        <span *ngIf="!isCollapsed">Patients</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeItem === 'rendezvous'"
+        title="Rendez-vous"
+        (click)="setActiveAndNavigate('rendezvous', 'rendezvous')"
+      >
+        <i class="fas fa-calendar-check"></i>
+        <span *ngIf="!isCollapsed">Rendez-vous</span>
+      </a>
+    </li>
+    <li class="nav-item logout-item">
+      <a class="nav-link logout-link" title="Se déconnecter" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="!isCollapsed">Se déconnecter</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Main content -->
+<div class="main-content" [class.expanded]="isCollapsed">
+  <button
+    class="btn btn-primary mobile-toggle-btn d-lg-none"
+    (click)="toggleSidebar()"
+    title="Menu"
+  >
+    <i class="fas fa-bars"></i>
+  </button>
+</div>

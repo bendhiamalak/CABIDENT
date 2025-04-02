@@ -1,0 +1,13 @@
+/* Style global pour FullCalendar */
+.fc, .fc *, .fc ::after, .fc ::before {
+    box-sizing: border-box;
+    max-height: 543px;
+    width: auto;
+}
+
+/* Optionnel : Style spécifique pour le conteneur principal */
+.fc .fc-view-harness {
+    max-height: 543px;
+    overflow-y: auto;
+}
+

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query as firestoreQuery , getDocs ,doc,
+import {
+  Firestore, collection, addDoc, query as firestoreQuery, getDocs, doc,
   deleteDoc,
   updateDoc,
-  getDoc} from '@angular/fire/firestore';
+  getDoc
+} from '@angular/fire/firestore';
 import { Observable, from, map } from 'rxjs';
 
 @Injectable({

@@ -2,10 +2,21 @@ import { Routes } from '@angular/router';
 import { PatientComponent } from './components/patient/patient.component';
 import { WelcomePageComponent } from './components/welcome-page/welcome-page.component';
 import { LoginComponent } from './components/login/login.component';
+import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 
 export const routes: Routes = [
     {path:'',component:WelcomePageComponent},
-    {path:'patients', component:PatientComponent},
-    {path:'login',component:LoginComponent}
+    {path:'login',component:LoginComponent},
+    {path:'admin',
+        component:AdminLayoutComponent,
+        children: [
+            {path:'patients', component:PatientComponent},
+            {path:'accueil', component: CalendarComponent}
+        ]
+    },
+    
+    {path:'**',redirectTo:''}
 ];
+//bech nzid par defaut admin ykoun f acceuil illi chtkoun fiha calender

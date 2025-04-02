@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {}
 
-  
+  /*
   addDocument() {
     const data = { name: 'Test', timestamp: new Date() };
     this.firestoreService.addDocument('testCollection', data)
@@ -43,5 +43,5 @@ export class AppComponent implements OnInit {
     this.firestoreService.deleteDocument('testCollection', documentId)
       .then(() => console.log('Document supprimé'))
       .catch((error) => console.error('Erreur :', error));
-  }
+  }*/
 }
