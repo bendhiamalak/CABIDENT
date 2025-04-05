@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +7,10 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 const firebaseConfig = {
   apiKey: "AIzaSyCYTJszIAyZQLDeTdvZC8Oq1J5nJvwka1I",
   authDomain: "cabident-ef1fc.firebaseapp.com",
@@ -23,6 +27,6 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(()=>getFirestore()),
     provideAnimations(),
     importProvidersFrom(FullCalendarModule),
-    
+    { provide: LOCALE_ID, useValue: 'fr' }
   ]
 };

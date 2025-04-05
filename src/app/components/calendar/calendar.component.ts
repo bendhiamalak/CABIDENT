@@ -7,22 +7,35 @@ import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
 import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 import { RendezVousService } from '../../services/rendez-vous.service';
-import { StatutRendezVous } from '../../models/rendez-vous';
+import { RendezVous, StatutRendezVous } from '../../models/rendez-vous';
 import { map, takeUntil } from 'rxjs/operators';
 import { CalendarService } from '../../services/calendar.service';
+import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import { FormsModule } from '@angular/forms';
+registerLocaleData(localeFr);
 declare var $: any;
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [FullCalendarModule, AppointmentDialogComponent],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'fr' }
+  ],
+  imports: [FullCalendarModule, AppointmentDialogComponent, CommonModule,FormsModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
 export class CalendarComponent implements AfterViewInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   private destroy=new Subject<void>();
+
+  rendezVousList: RendezVous[] = [];
+  selectedViewDate: Date = new Date();
+  searchTerm: string = '';
 
   constructor(
     private rdvService: RendezVousService,
@@ -69,14 +82,17 @@ export class CalendarComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.calendarService.registerCalendar(this.calendarComponent);
     this.loadAppointments();
+    this.chargerRdvsDuJour(); // Charge les RDV du jour actuel par défaut
     
     this.calendarService.refreshCalendar
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.loadAppointments();
+        this.chargerRdvsDuJour(this.selectedViewDate); // Recharge pour la date actuelle
       });
   }
 
+  
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
@@ -116,7 +132,7 @@ export class CalendarComponent implements AfterViewInit {
     };
   }
 
-  private convertToDate(dateValue: any): Date {
+  convertToDate(dateValue: any): Date {
     if (dateValue instanceof Date) {
       return dateValue;
     }
@@ -126,7 +142,7 @@ export class CalendarComponent implements AfterViewInit {
     if (typeof dateValue === 'string') {
       return new Date(dateValue);
     }
-    return new Date();
+    return new Date(dateValue.toISOString().slice(0, -1));
   }
 
   private getEventColor(status: StatutRendezVous): string {
@@ -162,8 +178,54 @@ export class CalendarComponent implements AfterViewInit {
     } else {
       alert('Ce créneau est déjà occupé !');
     }
+    this.chargerRdvsDuJour(info.date);
   }
 
+  chargerRdvsDuJour(date: Date = new Date()): void {
+    console.log('Chargement RDV pour:', date); // Debug
+    this.selectedViewDate = date;
+    
+    this.rdvService.getRendezVousDuJour(date).subscribe({
+      next: (rdvs) => {
+        console.log('RDV trouvés:', rdvs); // Debug
+        this.rendezVousList = rdvs;
+      },
+      error: (err) => {
+        //console.error('Erreur:', err);
+        this.rendezVousList = [];
+      }
+    });
+  }
   
+  onDateChange(): void {
+    this.chargerRdvsDuJour(this.selectedDate);
+  }
   
+  openAddDialog(): void {
+    this.calendarService.openAppointmentDialog(this.selectedDate);
+  }
+  
+  editAppointment(rdv: RendezVous, mode: 'time' | 'date' | 'full' = 'full') {
+    const editMode = `edit-${mode}` as const;
+    /*this.calendarService.openAppointmentDialog(
+      this.convertToDate(rdv.date), 
+      {
+        rendezVous: rdv,
+        mode: editMode
+      }
+    );*/
+  }
+  
+  async deleteAppointment(id: string): Promise<void> {
+    if (confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
+      try {
+        await this.rdvService.deleteRendezVous(id);
+        this.chargerRdvsDuJour(this.selectedDate);
+        this.calendarService.triggerRefresh();
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+      }
+    }
+  }
+
 }

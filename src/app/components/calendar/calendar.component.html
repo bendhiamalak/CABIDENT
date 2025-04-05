@@ -1,2 +1,105 @@
-<full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<div class="calendar-container">
+  <!-- Calendrier en haut -->
+  <div class="calendar-wrapper mb-4">
+    <full-calendar
+      #calendar
+      [options]="calendarOptions"
+      class="shadow-sm"
+    ></full-calendar>
+  </div>
+
+  <!-- Contrôles et liste des RDV -->
+  <div class="container-fluid p-0">
+    <div class="card border-0 shadow">
+      <div
+        class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+      >
+        <h5 class="mb-0">
+          <i class="bi bi-calendar3 me-2"></i>Gestion des rendez-vous
+        </h5>
+        <div class="d-flex">
+          <div class="input-group input-group-sm" style="width: 200px">
+            <input
+              type="date"
+              class="form-control form-control-sm"
+              [(ngModel)]="selectedDate"
+              (change)="onDateChange()"
+            />
+          </div>
+          <button (click)="openAddDialog()" class="btn btn-light btn-sm ms-2">
+            <i class="fa-solid fa-plus"></i>Nouveau
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div *ngIf="rendezVousList.length > 0; else noAppointments">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-3">Patient</th>
+                  <th>Heure</th>
+                  <th>Contact</th>
+                  <th>Durée</th>
+                  <th class="text-end pe-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rdv of rendezVousList">
+                  <td class="ps-3">
+                    <strong>{{ rdv.prenom }} {{ rdv.nom }}</strong>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark">
+                      {{ convertToDate(rdv.date) | date : "HH:mm" }}
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="tel:{{ rdv.telephone }}"
+                      class="text-decoration-none"
+                    >
+                      <i class="bi bi-telephone me-1"></i>{{ rdv.telephone }}
+                    </a>
+                  </td>
+                  <td>{{ rdv.duree }} min</td>
+                  <td class="text-end pe-3">
+                    <div class="btn-group btn-group-sm">
+                      <button
+                        (click)="editAppointment(rdv)"
+                        class="btn btn-outline-primary btn-sm"
+                        title="Modifier"
+                      >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-secondary btn-sm"
+                        title="Supprimer"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <ng-template #noAppointments>
+          <div class="text-center p-5 text-muted bg-light">
+            <i class="bi bi-calendar-x display-6"></i>
+            <h5 class="mt-3">Aucun rendez-vous</h5>
+            <p class="mb-0">Aucun rendez-vous trouvé pour cette date</p>
+            <button (click)="openAddDialog()" class="btn btn-primary mt-3">
+              <i class="bi bi-plus-circle me-2"></i>Créer un rendez-vous
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
 <app-appointment-dialog></app-appointment-dialog>

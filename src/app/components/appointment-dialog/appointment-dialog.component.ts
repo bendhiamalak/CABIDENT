@@ -24,7 +24,7 @@ declare var $: any;
   styleUrls: ['./appointment-dialog.component.css']
 })
 export class AppointmentDialogComponent implements OnInit {
-  @ViewChild('appointmentModal') modal!: ElementRef;
+  @ViewChild('appointmentModal', { static: false }) modal!: ElementRef;
 
   appointmentForm: FormGroup;
   filteredPatients: Patient[] = [];
@@ -34,6 +34,9 @@ export class AppointmentDialogComponent implements OnInit {
   
   selectedDate: Date = new Date();
   patient: Patient | null = null;
+
+  isEditMode = false;
+  currentRdvId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -108,11 +111,59 @@ export class AppointmentDialogComponent implements OnInit {
     return this.datePipe.transform(date, 'HH:mm', 'fr-FR') || '';
   }
 
-  openModal(date: Date, patient: Patient | null = null): void {
+  openModal(date: Date, options: {
+    patient?: Patient | null,
+    rendezVous?: RendezVous,
+    mode?: 'create' | 'edit-time' | 'edit-date' | 'edit-full'
+  } = {}): void {
     this.selectedDate = date;
-    this.patient = patient;
+    this.patient = options.patient || null;
+    this.isEditMode = !!options.rendezVous;
+    this.currentRdvId = options.rendezVous?.id || null;
+  
     this.resetForm();
-    $('#appointmentModal').modal('show');
+  
+    if (this.isEditMode && options.rendezVous) {
+      const rdvDate = this.convertToDate(options.rendezVous.date);
+      
+      // Pré-remplir selon le mode d'édition
+      switch(options.mode) {
+        case 'edit-time':
+          this.appointmentForm.patchValue({
+            date: this.formatDate(rdvDate), // Date fixe
+            heure: this.formatTime(rdvDate) // Heure modifiable
+          });
+          this.appointmentForm.get('date')?.disable();
+          break;
+          
+        case 'edit-date':
+          this.appointmentForm.patchValue({
+            date: this.formatDate(rdvDate), // Date modifiable
+            heure: this.formatTime(rdvDate) // Heure fixe
+          });
+          this.appointmentForm.get('heure')?.disable();
+          break;
+          
+        default: // edit-full ou création
+          this.prepopulateForm(options.rendezVous);
+      }
+    } else if (this.patient) {
+      this.prepopulatePatient(this.patient);
+    }
+  
+    try {
+      $('#appointmentModal').modal('show');
+      
+      setTimeout(() => {
+        if (this.modal?.nativeElement) {
+          const fieldToFocus = this.isEditMode ? 'notes' : 'patientSearch';
+          const input = this.modal.nativeElement.querySelector(`[formControlName="${fieldToFocus}"]`);
+          input?.focus();
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Erreur lors de l\'ouverture de la modal:', error);
+    }
   }
 
   closeModal(): void {
@@ -149,6 +200,34 @@ export class AppointmentDialogComponent implements OnInit {
       telephone: patient.telephone,
       email: patient.email || ''
     });
+  }
+
+  private prepopulateForm(rdv: RendezVous): void {
+    const rdvDate = this.convertToDate(rdv.date);
+    
+    this.appointmentForm.patchValue({
+      date: this.formatDate(rdvDate),
+      heure: this.formatTime(rdvDate),
+      patientId: rdv.patientId,
+      nom: rdv.nom,
+      prenom: rdv.prenom,
+      telephone: rdv.telephone,
+      email: rdv.email || '',
+      duree: rdv.duree,
+      notes: rdv.message || ''
+    });
+  
+    // Désactiver la recherche si en mode édition
+    this.appointmentForm.get('patientSearch')?.disable();
+    this.isPatientFound = true;
+    this.showPatientForm = false;
+  }
+
+  private convertToDate(dateValue: any): Date {
+    if (dateValue instanceof Date) return dateValue;
+    if (dateValue?.toDate) return dateValue.toDate();
+    if (typeof dateValue === 'string') return new Date(dateValue);
+    return new Date();
   }
 
   togglePatientForm(): void {

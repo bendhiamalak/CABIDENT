@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { Subject } from 'rxjs';
+import { RendezVous } from '../models/rendez-vous';
 @Injectable({
   providedIn: 'root'
 })
@@ -68,4 +69,11 @@ export class CalendarService {
   isDateInPast(date: Date): boolean {
     return date < new Date();
   }
+
+  private editDialogSubject = new Subject<RendezVous>();
+editDialog = this.editDialogSubject.asObservable();
+
+openEditDialog(rdv: RendezVous): void {
+  this.editDialogSubject.next(rdv);
+}
 }
