@@ -67,13 +67,13 @@
                   <td class="text-end pe-3">
                     <div class="btn-group btn-group-sm">
                       <button
-                        (click)="editAppointment(rdv)"
+                        (click)="editAppointment(rdv, 'full')"
                         class="btn btn-outline-primary btn-sm"
                         title="Modifier"
                       >
                         <i class="fa-solid fa-pen-to-square"></i>
                       </button>
-                      <button
+                      <button (click)="deleteAppointment(rdv.id!)" 
                         class="btn btn-outline-secondary btn-sm"
                         title="Supprimer"
                       >

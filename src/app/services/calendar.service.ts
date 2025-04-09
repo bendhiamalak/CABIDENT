@@ -8,7 +8,7 @@ import { RendezVous } from '../models/rendez-vous';
 export class CalendarService {
 
   private refreshCalendarSubject = new Subject<void>();
-  private openDialogSubject = new Subject<Date>();
+  private openDialogSubject = new Subject<{date: Date, options?: any}>();
   private calendarComponent?: FullCalendarComponent;
 
 
@@ -23,23 +23,37 @@ export class CalendarService {
     this.refreshCalendarSubject.next();
   }
 
-  openAppointmentDialog(date: Date) {
-    this.openDialogSubject.next(date);
-  }
+  // Dans CalendarService
+openAppointmentDialog(date: Date, options: {
+  rendezVous?: RendezVous,
+  mode?: 'create' | 'edit-time' | 'edit-date' | 'edit-full'
+} = {}) {
+  this.openDialogSubject.next({ 
+    date,
+    options
+  });
+}
 
-  isSlotAvailable(startDate: Date, duration: number): boolean {
-    if (!this.calendarComponent) return false;
+isSlotAvailable(startDate: Date, duration: number, excludedRdvId?: string): boolean {
+  if (!this.calendarComponent) return false;
+  
+  const calendarApi = this.calendarComponent.getApi();
+  const endDate = new Date(startDate.getTime() + duration * 60000);
+  const events = calendarApi.getEvents();
+  
+  return !events.some(event => {
+    // Exclure l'événement avec l'ID spécifié (pour les modifications)
+    if (excludedRdvId && event.id === excludedRdvId) {
+      return false;
+    }
     
-    const calendarApi = this.calendarComponent.getApi();
-    const endDate = new Date(startDate.getTime() + duration * 60000);
-    const events = calendarApi.getEvents();
+    const eventStart = event.start!;
+    const eventEnd = event.end || eventStart;
     
-    return !events.some(event => {
-      const eventStart = event.start!;
-      const eventEnd = event.end!;
-      return (startDate < eventEnd && endDate > eventStart);
-    });
-  }
+    // Vérifier le chevauchement
+    return (startDate < eventEnd && endDate > eventStart);
+  });
+}
 
   isWithinBusinessHours(date: Date): boolean {
     if (!this.calendarComponent) return false;

@@ -205,27 +205,30 @@ export class CalendarComponent implements AfterViewInit {
     this.calendarService.openAppointmentDialog(this.selectedDate);
   }
   
-  editAppointment(rdv: RendezVous, mode: 'time' | 'date' | 'full' = 'full') {
-    const editMode = `edit-${mode}` as const;
-    /*this.calendarService.openAppointmentDialog(
-      this.convertToDate(rdv.date), 
-      {
-        rendezVous: rdv,
-        mode: editMode
-      }
-    );*/
-  }
+  // Dans CalendarComponent
+editAppointment(rdv: RendezVous, mode: 'time' | 'date' | 'full' = 'full') {
+  const editMode = `edit-${mode}` as const;
+  this.calendarService.openAppointmentDialog(
+    this.convertToDate(rdv.date), 
+    {
+      rendezVous: rdv,
+      mode: editMode
+    }
+  );
+}
   
-  async deleteAppointment(id: string): Promise<void> {
-    if (confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
-      try {
-        await this.rdvService.deleteRendezVous(id);
-        this.chargerRdvsDuJour(this.selectedDate);
-        this.calendarService.triggerRefresh();
-      } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-      }
+async deleteAppointment(id?: string): Promise<void> {
+  if (!id) return; // Gestion du cas undefined
+  
+  if (confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
+    try {
+      await this.rdvService.deleteRendezVous(id);
+      this.chargerRdvsDuJour(this.selectedDate);
+      this.calendarService.triggerRefresh();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
     }
   }
+}
 
 }

@@ -24,19 +24,50 @@
       <div class="modal-body">
         <form [formGroup]="appointmentForm">
           <!-- Date et Heure -->
+          <!-- Date et Heure -->
           <div class="form-row mb-3">
             <div class="col-md-6">
               <label>Date</label>
               <input
-                type="text"
+                type="date"
                 class="form-control"
                 formControlName="date"
-                readonly
+                [class.is-invalid]="
+                  appointmentForm.get('date')?.invalid &&
+                  appointmentForm.get('date')?.touched
+                "
               />
+              <div
+                *ngIf="
+                  appointmentForm.get('date')?.invalid &&
+                  appointmentForm.get('date')?.touched
+                "
+                class="invalid-feedback"
+              >
+                La date est obligatoire
+              </div>
             </div>
             <div class="col-md-6">
               <label>Heure</label>
-              <input type="text" class="form-control" formControlName="heure" />
+              <input
+                type="time"
+                class="form-control"
+                formControlName="heure"
+                [class.is-invalid]="
+                  appointmentForm.get('heure')?.invalid &&
+                  appointmentForm.get('heure')?.touched
+                "
+                required
+              />
+              <div
+                *ngIf="
+                  appointmentForm.get('heure')?.invalid &&
+                  appointmentForm.get('heure')?.touched
+                "
+                class="invalid-feedback"
+              >
+                L'heure est obligatoire
+              </div>
             </div>
           </div>
 

@@ -24,7 +24,7 @@ declare var $: any;
   styleUrls: ['./appointment-dialog.component.css']
 })
 export class AppointmentDialogComponent implements OnInit {
-  @ViewChild('appointmentModal', { static: false }) modal!: ElementRef;
+  @ViewChild('appointmentModal') modal!: ElementRef;
 
   appointmentForm: FormGroup;
   filteredPatients: Patient[] = [];
@@ -50,15 +50,33 @@ export class AppointmentDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupPatientSearch();
-    this.calendarService.openDialog.subscribe(date => {
-      this.openModal(date);
+    this.calendarService.openDialog.subscribe(info => {
+      const { date, options } = info;
+      
+      // Si c'est une modification de rendez-vous
+      if (options?.rendezVous) {
+        const rendezVous = options.rendezVous;
+        const patient = {
+          id: rendezVous.patientId,
+          nom: rendezVous.nom,
+          prenom: rendezVous.prenom,
+          telephone: rendezVous.telephone,
+          email: rendezVous.email || '',
+          dateCreation: new Date() 
+        };
+        
+        this.openModal(date, patient, rendezVous);
+      } else {
+        // Création normale
+        this.openModal(date);
+      }
     });
   }
 
   private createForm(): FormGroup {
     return this.fb.group({
-      date: [this.formatDate(this.selectedDate), Validators.required],
-      heure: [this.formatTime(this.selectedDate), Validators.required],
+      date: [this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd'), Validators.required],
+      heure: [this.datePipe.transform(this.selectedDate, 'HH:mm'), Validators.required],
       patientSearch: [''],
       patientId: ['', Validators.required],
       nom: ['', [Validators.required]],
@@ -111,55 +129,43 @@ export class AppointmentDialogComponent implements OnInit {
     return this.datePipe.transform(date, 'HH:mm', 'fr-FR') || '';
   }
 
-  openModal(date: Date, options: {
-    patient?: Patient | null,
-    rendezVous?: RendezVous,
-    mode?: 'create' | 'edit-time' | 'edit-date' | 'edit-full'
-  } = {}): void {
+  openModal(date: Date, patient: Patient | null = null, rendezVous?: RendezVous): void {
+    // 1. Mettre à jour les dates sélectionnées
     this.selectedDate = date;
-    this.patient = options.patient || null;
-    this.isEditMode = !!options.rendezVous;
-    this.currentRdvId = options.rendezVous?.id || null;
+    this.patient = patient;
   
+    // 2. Gérer le mode édition/création
+    this.isEditMode = !!rendezVous;
+    this.currentRdvId = rendezVous?.id || null;
+  
+    // 3. Réinitialiser le formulaire avec les valeurs appropriées
     this.resetForm();
   
-    if (this.isEditMode && options.rendezVous) {
-      const rdvDate = this.convertToDate(options.rendezVous.date);
-      
-      // Pré-remplir selon le mode d'édition
-      switch(options.mode) {
-        case 'edit-time':
-          this.appointmentForm.patchValue({
-            date: this.formatDate(rdvDate), // Date fixe
-            heure: this.formatTime(rdvDate) // Heure modifiable
-          });
-          this.appointmentForm.get('date')?.disable();
-          break;
-          
-        case 'edit-date':
-          this.appointmentForm.patchValue({
-            date: this.formatDate(rdvDate), // Date modifiable
-            heure: this.formatTime(rdvDate) // Heure fixe
-          });
-          this.appointmentForm.get('heure')?.disable();
-          break;
-          
-        default: // edit-full ou création
-          this.prepopulateForm(options.rendezVous);
-      }
-    } else if (this.patient) {
-      this.prepopulatePatient(this.patient);
+    // 4. Formater la date correctement pour le formulaire
+    const formattedDate = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const formattedTime = this.datePipe.transform(date, 'HH:mm');
+    
+    this.appointmentForm.patchValue({
+      date: formattedDate,
+      heure: formattedTime
+    });
+  
+    // 5. Pré-remplir le formulaire si en mode édition
+    if (this.isEditMode && rendezVous) {
+      this.prepopulateForm(rendezVous);
+    } else if (patient) {
+      // Pré-remplir les infos patient si fourni
+      this.prepopulatePatient(patient);
     }
   
+    // 6. Ouvrir la modal
     try {
       $('#appointmentModal').modal('show');
       
+      // 7. Focus sur le premier champ après l'ouverture
       setTimeout(() => {
-        if (this.modal?.nativeElement) {
-          const fieldToFocus = this.isEditMode ? 'notes' : 'patientSearch';
-          const input = this.modal.nativeElement.querySelector(`[formControlName="${fieldToFocus}"]`);
-          input?.focus();
-        }
+        const firstInput = this.modal.nativeElement.querySelector('input');
+        firstInput?.focus();
       }, 100);
     } catch (error) {
       console.error('Erreur lors de l\'ouverture de la modal:', error);
@@ -206,8 +212,8 @@ export class AppointmentDialogComponent implements OnInit {
     const rdvDate = this.convertToDate(rdv.date);
     
     this.appointmentForm.patchValue({
-      date: this.formatDate(rdvDate),
-      heure: this.formatTime(rdvDate),
+      date: this.datePipe.transform(rdvDate, 'yyyy-MM-dd'),
+      heure: this.datePipe.transform(rdvDate, 'HH:mm'),
       patientId: rdv.patientId,
       nom: rdv.nom,
       prenom: rdv.prenom,
@@ -222,7 +228,6 @@ export class AppointmentDialogComponent implements OnInit {
     this.isPatientFound = true;
     this.showPatientForm = false;
   }
-
   private convertToDate(dateValue: any): Date {
     if (dateValue instanceof Date) return dateValue;
     if (dateValue?.toDate) return dateValue.toDate();
@@ -259,8 +264,12 @@ export class AppointmentDialogComponent implements OnInit {
     }
   
     const formValue = this.appointmentForm.value;
+    
+    // Créer la date à partir des valeurs de formulaire
+    const dateStr = formValue.date; // Au format yyyy-MM-dd
     const [hours, minutes] = formValue.heure.split(':');
-    const appointmentDate = new Date(this.selectedDate);
+    
+    const appointmentDate = new Date(dateStr);
     appointmentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
   
     // Vérifications
@@ -274,7 +283,10 @@ export class AppointmentDialogComponent implements OnInit {
       return;
     }
   
-    if (!this.calendarService.isSlotAvailable(appointmentDate, formValue.duree)) {
+    // Pour les modifications, exclure le RDV actuel de la vérification de disponibilité
+    const exclusionId = this.isEditMode ? this.currentRdvId || undefined : undefined;
+    
+    if (!this.calendarService.isSlotAvailable(appointmentDate, formValue.duree, exclusionId)) {
       alert('Ce créneau chevauche un rendez-vous existant !');
       return;
     }
@@ -293,9 +305,18 @@ export class AppointmentDialogComponent implements OnInit {
         const patientId = await lastValueFrom(
           this.patientService.addPatient(newPatient)
         );
-        await this.createAppointment(appointmentDate, formValue, patientId);
+        
+        if (this.isEditMode && this.currentRdvId) {
+          await this.updateAppointment(appointmentDate, formValue, patientId);
+        } else {
+          await this.createAppointment(appointmentDate, formValue, patientId);
+        }
       } else {
-        await this.createAppointment(appointmentDate, formValue, formValue.patientId);
+        if (this.isEditMode && this.currentRdvId) {
+          await this.updateAppointment(appointmentDate, formValue, formValue.patientId);
+        } else {
+          await this.createAppointment(appointmentDate, formValue, formValue.patientId);
+        }
       }
   
       this.closeModal();
@@ -305,6 +326,25 @@ export class AppointmentDialogComponent implements OnInit {
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  private updateAppointment(appointmentDate: Date, formValue: any, patientId: string): Promise<void> {
+    if (!this.currentRdvId) {
+      return Promise.reject('ID de rendez-vous manquant');
+    }
+    
+    const updatedRdv: Partial<RendezVous> = {
+      patientId: patientId,
+      nom: formValue.nom,
+      prenom: formValue.prenom,
+      telephone: formValue.telephone,
+      email: formValue.email || '',
+      date: appointmentDate,
+      duree: formValue.duree,
+      message: formValue.notes || '',
+    };
+  
+    return this.rdvService.updateRendezVous(this.currentRdvId, updatedRdv);
   }
   
   private validatePatientFields(formValue: any): boolean {
