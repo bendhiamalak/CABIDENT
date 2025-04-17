@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RendezVous } from '../../models/rendez-vous';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
   styleUrl: './welcome-page.component.css'
 })
 export class WelcomePageComponent  implements OnInit {
+  activeSection: string = 'hero';
   showSuccessModal: boolean = false;
 successMessage: string = '';
 private modalTimeout: any;
@@ -35,15 +36,31 @@ private modalTimeout: any;
     });
   }
 
-  // Validateur personnalisé pour la date (lundi à vendredi)
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const sections = ['hero', 'about', 'services', 'contact'];
+
+    for (let section of sections) {
+      const element = document.getElementById(section);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom > 100) {
+          this.activeSection = section;
+          break;
+        }
+      }
+    }
+  }
+  
+
   validateDate(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
   
     const selectedDate = new Date(control.value);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Supprime l'heure pour comparer uniquement la date
+    today.setHours(0, 0, 0, 0); 
   
-    const dayOfWeek = selectedDate.getDay(); // 0 (dimanche) à 6 (samedi)
+    const dayOfWeek = selectedDate.getDay(); 
   
     if (selectedDate < today) {
       return { pastDate: true }; 
@@ -60,19 +77,19 @@ private modalTimeout: any;
   validateHeure(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
 
-    const selectedTime = control.value; // Format "HH:MM"
+    const selectedTime = control.value; 
     const [hours, minutes] = selectedTime.split(':').map(Number);
 
     const isMorning = hours >= 8 && (hours < 11 || (hours === 11 && minutes <= 30));
     const isAfternoon = hours >= 14 && hours < 17;
 
     if (!isMorning && !isAfternoon) {
-      return { invalidTime: true }; // Retourne une erreur si l'heure est invalide
+      return { invalidTime: true }; 
     }
-    return null; // Pas d'erreur
+    return null; 
   }
 
-  // Ajoutez cette méthode pour charger les créneaux disponibles
+  
 chargerCreneauxDisponibles(date: Date): void {
   console.log('Chargement des créneaux pour:', date);
   this.selectedViewDate = date;
@@ -91,25 +108,23 @@ chargerCreneauxDisponibles(date: Date): void {
   });
 }
 
-// Méthode pour générer les créneaux disponibles
 genererCreneauxDisponibles(date: Date, rdvs: RendezVous[]): void {
-  // Heures d'ouverture (à adapter selon vos besoins)
+
   const heuresDebutMatin = 8;
   const heuresFinMatin = 11;
   const heuresDebutApresMidi = 14;
   const heuresFinApresMidi = 17;
-  const dureeCreneau = 30; // en minutes
+  const dureeCreneau = 30; 
 
-  // Récupérer tous les créneaux occupés
   const creneauxOccupes = rdvs.map(rdv => {
     const rdvDate = new Date(rdv.date);
     return rdvDate.getHours() + ':' + (rdvDate.getMinutes() < 10 ? '0' : '') + rdvDate.getMinutes();
   });
 
-  // Générer tous les créneaux possibles
+
   const tousCreneaux: string[] = [];
   
-  // Créneaux du matin
+
   for (let h = heuresDebutMatin; h <= heuresFinMatin; h++) {
     for (let m = 0; m < 60; m += dureeCreneau) {
       const heure = h + ':' + (m < 10 ? '0' : '') + m;
@@ -117,7 +132,7 @@ genererCreneauxDisponibles(date: Date, rdvs: RendezVous[]): void {
     }
   }
 
-  // Créneaux de l'après-midi
+
   for (let h = heuresDebutApresMidi; h <= heuresFinApresMidi; h++) {
     for (let m = 0; m < 60; m += dureeCreneau) {
       const heure = h + ':' + (m < 10 ? '0' : '') + m;
@@ -125,13 +140,13 @@ genererCreneauxDisponibles(date: Date, rdvs: RendezVous[]): void {
     }
   }
 
-  // Filtrer pour garder seulement les créneaux disponibles
+
   this.creneauxDisponibles = tousCreneaux.filter(creneau => 
     !creneauxOccupes.includes(creneau)
   );
 }
 
-// Modifiez onSubmit pour utiliser l'heure sélectionnée
+
 onSubmit(): void {
   if (this.appointmentForm.valid) {
     const formData = this.appointmentForm.value;
@@ -146,7 +161,7 @@ onSubmit(): void {
       telephone: formData.telephone,
       email: formData.email,
       date: dateRdv,
-      duree: 30, // ou la durée que vous souhaitez
+      duree: 30, 
       message: formData.message,
       statut: StatutRendezVous.EN_ATTENTE,
       rappelEnvoye: false,
@@ -159,16 +174,14 @@ onSubmit(): void {
         console.log('Rendez-vous enregistré avec succès !');
         this.appointmentForm.reset();
         this.creneauxDisponibles = [];
-        
-        // Afficher le popup
+
         this.successMessage = `
           <h4>Rendez-vous confirmé !</h4>
           <p>Votre rendez-vous a été pris avec succès pour le 
           <strong>${dateRdv.toLocaleDateString('fr-FR')} à ${heures}:${minutes}</strong></p>
         `;
         this.showSuccessModal = true;
-        
-        // Fermer automatiquement après 5 secondes
+      
         this.setModalTimeout();
       })
       .catch(error => {
@@ -177,48 +190,18 @@ onSubmit(): void {
       });
   }
 }
-
-  /*onSubmit(): void {
-    if (this.appointmentForm.valid) {
-      const formData = this.appointmentForm.value;
-      const rendezVous: RendezVous = {
-        patientId: '12345', 
-        nom: formData.nom,
-        prenom: formData.prenom,
-        telephone: formData.telephone,
-        email: formData.email,
-        date: new Date(formData.date + 'T' + formData.heure), // Fusion de la date et de l'heure
-        duree: 120,  
-        message: formData.message,
-        statut: StatutRendezVous.EN_ATTENTE,
-        rappelEnvoye: false,
-        confirmationEnvoyee: false,
-        dateCreation: new Date()
-      };
- 
-      this.rendezVousService.addRendezVous(rendezVous)
-        .then(() => {
-          console.log(' Rendez-vous enregistré avec succès !');
-          this.appointmentForm.reset();
-        })
-        .catch(error => console.error('Erreur lors de l’enregistrement :', error));
-    } else {
-      console.log('Formulaire invalide');
-    }
-  }*/
     private setModalTimeout(): void {
-      // Annuler tout timeout existant
+
       if (this.modalTimeout) {
         clearTimeout(this.modalTimeout);
       }
       
-      // Définir un nouveau timeout
+
       this.modalTimeout = setTimeout(() => {
         this.showSuccessModal = false;
-      }, 3000); 
+      }, 5000); 
     }
-    
-    // Nettoyage quand le composant est détruit
+
     ngOnDestroy(): void {
       if (this.modalTimeout) {
         clearTimeout(this.modalTimeout);

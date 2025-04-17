@@ -73,12 +73,29 @@
                       >
                         <i class="fa-solid fa-pen-to-square"></i>
                       </button>
-                      <button (click)="deleteAppointment(rdv.id!)" 
+                      <button
+                        (click)="deleteAppointment(rdv.id!)"
                         class="btn btn-outline-secondary btn-sm"
                         title="Supprimer"
                       >
                         <i class="fa-solid fa-trash"></i>
                       </button>
+                      <button
+                        class="btn btn-sm btn-outline-info"
+                        (click)="navigateToConsultation(rdv.patientId)"
+                        title="Voir Consultations"
+                      >
+                      <i class="fa-solid fa-calendar-plus"></i>
+                      </button>
+
+                      <button
+                        (click)="sendOne(rdv.id!)"
+                        class="btn btn-outline-warning btn-sm"
+                        title="Envoyer Rappel"
+                      >
+                      <i class="fa-solid fa-phone-volume"></i>
+                      </button>
+                      
                     </div>
                   </td>
                 </tr>

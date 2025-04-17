@@ -53,7 +53,6 @@ export class AppointmentDialogComponent implements OnInit {
     this.calendarService.openDialog.subscribe(info => {
       const { date, options } = info;
       
-      // Si c'est une modification de rendez-vous
       if (options?.rendezVous) {
         const rendezVous = options.rendezVous;
         const patient = {

@@ -1,7 +1,6 @@
 <div class="container">
   <h1>Gestion des Patients</h1>
 
-  <!-- Formulaire pour ajouter un patient -->
   <div class="form-section">
     <h2>Ajouter un Patient</h2>
     <form (ngSubmit)="addPatient()">
@@ -31,7 +30,7 @@
     </form>
   </div>
 
-  <!-- Formulaire pour mettre à jour un patient -->
+
   <div class="form-section" *ngIf="selectedPatient">
     <h2>Modifier un Patient</h2>
     <form (ngSubmit)="updatePatient()">

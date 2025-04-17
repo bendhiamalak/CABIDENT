@@ -23,7 +23,7 @@ export class PatientService {
     );
   }
 
-  // Recherche de patients avec debounce et gestion des erreurs
+
   searchPatients(searchTerm: string): Observable<Patient[]> {
     if (!searchTerm || searchTerm.length < 2) {
       return of([]);

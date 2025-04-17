@@ -54,7 +54,7 @@ export class LoginComponent {
       return;
     }
 
-    this.router.navigate(['/patients']);
+    this.router.navigate(['/admin/accueil']);
   }
   
   navigateToHome() {

@@ -1,0 +1,11 @@
+/* Add to consultation.component.css */
+.btn-back {
+    margin-bottom: 20px;
+  }
+  
+  .consultation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }

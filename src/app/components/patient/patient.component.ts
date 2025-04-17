@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 declare var $: any;
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-patient',
   standalone: true,
@@ -25,7 +25,7 @@ export class PatientComponent implements OnInit {
   currentPatientId: string | null = null;
   patientForm: FormGroup;
 
-  constructor(private patientService: PatientService, private fb: FormBuilder) {
+  constructor(private patientService: PatientService, private fb: FormBuilder,private router: Router) {
     this.patientForm = this.fb.group({
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
@@ -71,10 +71,7 @@ export class PatientComponent implements OnInit {
     );
   }
 
-  viewConsultations(patientId: string): void {
-    console.log('Voir consultations pour patient:', patientId);
-    // Implémentez la navigation vers les consultations
-  }
+  
 
   editPatient(patient: Patient): void {
     this.isEditMode = true;
@@ -169,5 +166,13 @@ export class PatientComponent implements OnInit {
     } else {
       this.addPatient();
     }
+  }
+
+  navigateToConsultation(patientId: string): void {
+    if (!patientId) {
+      console.error('No patient ID provided');
+      return;
+    }
+    this.router.navigate(['/admin/consultations', patientId]);
   }
 }

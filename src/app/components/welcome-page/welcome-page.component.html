@@ -26,10 +26,10 @@
 
           <nav id="navmenu" class="navmenu">
             <ul>
-              <li><a href="#hero" class="active">Accueil</a></li>
-              <li><a href="#about">Qui Somme Nous</a></li>
-              <li><a href="#services">Nos Services</a></li>
-              <li><a href="#contact">Contactez Nous</a></li>
+              <li><a href="#hero" class="nav-link" [class.active]="activeSection === 'hero'">Accueil</a></li>
+              <li><a href="#about" class="nav-link" [class.active]="activeSection === 'about'">Qui Somme Nous</a></li>
+              <li><a href="#services" class="nav-link" [class.active]="activeSection === 'services'">Nos Services</a></li>
+              <li><a href="#contact" class="nav-link" [class.active]="activeSection === 'contact'">Contactez Nous</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
@@ -58,71 +58,15 @@
                 traitements adaptés à chaque patient. Votre santé bucco-dentaire
                 est notre priorité !
               </p>
-              <a href="#about" class="btn-get-started">voir plus</a>
+              <a href="#appointment" class="btn-get-started">Prendre Un Rendez-vous</a>
             </div>
           </div>
-          <!-- End Carousel Item -->
-
-          <div class="carousel-item">
-            <img src="img/hero-carousel/hero-carousel2.jpg" alt="" />
-            <div class="container">
-              <h2>Un accueil chaleureux et personnalisé</h2>
-              <p>
-                Nous croyons que chaque sourire est unique. C'est pourquoi nous
-                vous réservons un accueil convivial et une prise en charge
-                personnalisée. À Cabident, vous êtes bien plus qu'un patient :
-                vous êtes au cœur de notre engagement pour votre bien-être.
-              </p>
-              <a href="#about" class="btn-get-started">Read More</a>
-            </div>
-          </div>
-          <!-- End Carousel Item -->
-
-          <div class="carousel-item">
-            <img src="img/hero-carousel/hero-carousel3.jpg" alt="" />
-            <div class="container">
-              <h2>Prenez rendez-vous dès aujourd’hui !</h2>
-              <p>
-                Que ce soit pour un contrôle de routine, un soin spécifique ou
-                un traitement esthétique, nous sommes à votre disposition.
-                Prenez rendez-vous facilement et laissez-nous vous aider à
-                retrouver un sourire éclatant et en pleine santé !
-              </p>
-              <a href="#about" class="btn-get-started">Read More</a>
-            </div>
-          </div>
-          <!-- End Carousel Item -->
-
-          <a
-            class="carousel-control-prev"
-            href="#hero-carousel"
-            role="button"
-            data-bs-slide="prev"
-          >
-            <span
-              class="carousel-control-prev-icon bi bi-chevron-left"
-              aria-hidden="true"
-            ></span>
-          </a>
-
-          <a
-            class="carousel-control-next"
-            href="#hero-carousel"
-            role="button"
-            data-bs-slide="next"
-          >
-            <span
-              class="carousel-control-next-icon bi bi-chevron-right"
-              aria-hidden="true"
-            ></span>
-          </a>
-
-          <ol class="carousel-indicators"></ol>
+    
         </div>
       </section>
-      <!-- /Hero Section -->
+      
 
-      <!-- Featured Services Section -->
+
       <section id="featured-services" class="featured-services section">
         <div class="container">
           <div class="row gy-4">
@@ -142,7 +86,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+     
 
             <div
               class="col-xl-3 col-md-6 d-flex"
@@ -158,7 +102,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+           
 
             <div
               class="col-xl-3 col-md-6 d-flex"
@@ -178,7 +122,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+            
 
             <div
               class="col-xl-3 col-md-6 d-flex"
@@ -193,13 +137,11 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+     
           </div>
         </div>
       </section>
-      <!-- /Featured Services Section -->
-
-      <!-- Call To Action Section -->
+    
       <section
         id="call-to-action"
         class="call-to-action section accent-background"
@@ -227,11 +169,10 @@
           </div>
         </div>
       </section>
-      <!-- /Call To Action Section -->
+      
 
-      <!-- About Section -->
+
       <section id="about" class="about section">
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Qui Somme Nous<br /></h2>
           <p>
@@ -242,7 +183,6 @@
             besoins.
           </p>
         </div>
-        <!-- End Section Title -->
 
         <div class="container">
           <div class="row gy-4">
@@ -258,23 +198,23 @@
               data-aos="fade-up"
               data-aos-delay="200"
             >
-              <h3>Dr. Ben Dhia Malek - Votre expert en soins dentaires</h3>
+              <h3>Dr. Zaghbani Aicha - Votre expert en soins dentaires</h3>
               <p class="fst-italic">
-                Fort de plusieurs années d'expérience, le Dr. Ben Dhia Malek est
+                Fort de plusieurs années d'expérience, le Dr. Zaghbani Aicha est
                 spécialisé dans les soins dentaires modernes, mettant toujours
                 le patient au centre de son approche.
               </p>
               <ul>
                 <li>
-                  <i class="bi bi-check2-all"></i>
+                  <i class="fa-solid fa-check"></i>
                   <span>Plus de 10 ans d'expérience en dentisterie.</span>
                 </li>
                 <li>
-                  <i class="bi bi-check2-all"></i>
+                  <i class="fa-solid fa-check"></i>
                   <span>Expert en implantologie et soins esthétiques.</span>
                 </li>
                 <li>
-                  <i class="bi bi-check2-all"></i>
+                  <i class="fa-solid fa-check"></i>
                   <span
                     >Approche bienveillante et personnalisée pour chaque
                     patient.</span
@@ -282,7 +222,7 @@
                 </li>
               </ul>
               <p>
-                Passionné par son métier, le Dr. Ben Dhia s'engage à vous offrir
+                Passionné par son métier, le Dr. Zaghbani s'engage à vous offrir
                 des soins de qualité avec les dernières avancées technologiques
                 pour un sourire éclatant.
               </p>
@@ -290,11 +230,9 @@
           </div>
         </div>
       </section>
-      <!-- /About Section -->
 
-      <!-- Services Section -->
       <section id="services" class="services section">
-        <!-- Section Title -->
+ 
         <div class="container section-title" data-aos="fade-up">
           <h2>Nos Services</h2>
           <p>
@@ -303,7 +241,7 @@
             pointe et une approche personnalisée.
           </p>
         </div>
-        <!-- End Section Title -->
+
 
         <div class="container">
           <div class="row gy-4">
@@ -325,7 +263,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+     
 
             <div
               class="col-lg-4 col-md-6"
@@ -345,7 +283,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+
 
             <div
               class="col-lg-4 col-md-6"
@@ -365,7 +303,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
+     
             <div
               class="col-lg-4 col-md-6"
               data-aos="fade-up"
@@ -384,9 +322,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
-
-            <!-- Orthodontie -->
+      
             <div
               class="col-lg-4 col-md-6"
               data-aos="fade-up"
@@ -405,9 +341,7 @@
                 </p>
               </div>
             </div>
-            <!-- End Service Item -->
-
-            <!-- Esthétique Dentaire -->
+   
             <div
               class="col-lg-4 col-md-6"
               data-aos="fade-up"
@@ -429,10 +363,7 @@
           </div>
         </div>
       </section>
-      <!-- /Services Section -->
 
-      <!-- Popup de succès -->
-      <!-- Popup de succès (version sans bouton) -->
       <div
         *ngIf="showSuccessModal"
         class="modal fade show"
@@ -449,7 +380,7 @@
               </h5>
             </div>
             <div class="modal-body" [innerHTML]="successMessage"></div>
-            <!-- Barre de progression pour le temps restant -->
+
             <div class="progress" style="height: 4px">
               <div
                 class="progress-bar bg-success"
@@ -460,9 +391,9 @@
           </div>
         </div>
       </div>
-      <!-- Section Title -->
+
       <section id="appointment" class="appointment section light-background">
-        <!-- Section Title -->
+
         <div class="container section-title" data-aos="fade-up">
           <h2>PRENDRE UN RENDEZ-VOUS</h2>
           <p>
@@ -470,7 +401,7 @@
             rendez-vous en quelques clics avec nos spécialistes.
           </p>
         </div>
-        <!-- End Section Title -->
+
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <form
@@ -653,11 +584,10 @@
           </form>
         </div>
       </section>
-      <!-- /Appointment Section -->
 
-      <!-- Section Témoignages -->
+
       <section id="testimonials" class="testimonials section">
-        <!-- Titre de la section -->
+       
         <div class="container section-title" data-aos="fade-up">
           <h2>Ce que disent nos patients</h2>
           <p>
@@ -665,7 +595,7 @@
             bénéficié des soins du Dr. [Nom du Docteur].
           </p>
         </div>
-        <!-- Fin du titre de la section -->
+
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div
@@ -674,38 +604,14 @@
             data-delay="5000"
             data-breakpoints='{ "320": { "slidesPerView": 1, "spaceBetween": 40 }, "1200": { "slidesPerView": 3, "spaceBetween": 40 } }'
           >
-            <script type="application/json" class="swiper-config">
-              {
-                "loop": true,
-                "speed": 600,
-                "autoplay": {
-                  "delay": 5000
-                },
-                "slidesPerView": "auto",
-                "pagination": {
-                  "el": ".swiper-pagination",
-                  "type": "bullets",
-                  "clickable": true
-                },
-                "breakpoints": {
-                  "320": {
-                    "slidesPerView": 1,
-                    "spaceBetween": 40
-                  },
-                  "1200": {
-                    "slidesPerView": 3,
-                    "spaceBetween": 20
-                  }
-                }
-              }
-            </script>
+            
             <div class="swiper-wrapper">
               <div class="swiper-slide">
                 <div class="testimonial-item">
                   <p>
                     <i class="bi bi-quote quote-icon-left"></i>
                     <span>
-                      Le Dr. [Nom] est un professionnel exceptionnel ! Grâce à
+                      Le Dr. Zaghbani est un professionnel exceptionnel ! Grâce à
                       lui, j'ai retrouvé la santé rapidement. Son écoute et son
                       expertise sont remarquables.
                     </span>
@@ -716,11 +622,11 @@
                     class="testimonial-img"
                     alt="Patient 1"
                   />
-                  <h3>Marie Dupont</h3>
-                  <h4>Patiente</h4>
+                  <h3>Ali Challouf</h3>
+                  <h4>Patient</h4>
                 </div>
               </div>
-              <!-- Fin du témoignage -->
+   
 
               <div class="swiper-slide">
                 <div class="testimonial-item">
@@ -737,18 +643,18 @@
                     class="testimonial-img"
                     alt="Patient 2"
                   />
-                  <h3>Jean Martin</h3>
-                  <h4>Patient</h4>
+                  <h3>Hela Ben Amor</h3>
+                  <h4>Patiente</h4>
                 </div>
               </div>
-              <!-- Fin du témoignage -->
+        
 
               <div class="swiper-slide">
                 <div class="testimonial-item">
                   <p>
                     <i class="bi bi-quote quote-icon-left"></i>
                     <span>
-                      Je recommande vivement le Dr. [Nom]. Son professionnalisme
+                      Je recommande vivement le Dr. Zaghbani. Son professionnalisme
                       et sa gentillesse font toute la différence. Un grand merci
                       !
                     </span>
@@ -759,26 +665,25 @@
                     class="testimonial-img"
                     alt="Patient 3"
                   />
-                  <h3>Sophie Bernard</h3>
-                  <h4>Patiente</h4>
+                  <h3>Ahmed Werdi</h3>
+                  <h4>Patient</h4>
                 </div>
               </div>
-              <!-- Fin du témoignage -->
+            
             </div>
             <div class="swiper-pagination"></div>
           </div>
         </div>
       </section>
 
-      <!-- Contact Section -->
-      <!-- Contact Section -->
+     
       <section id="contact" class="contact section">
-        <!-- Section Title -->
+    
         <div class="container section-title" data-aos="fade-up">
           <h2>Contact</h2>
           <p>Vous pouvez nous contacter via les informations ci-dessous.</p>
         </div>
-        <!-- End Section Title -->
+  
 
         <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
           <iframe
@@ -791,7 +696,7 @@
           ></iframe>
         </div>
 
-        <!-- End Google Maps -->
+
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="row gy-4">
@@ -811,7 +716,7 @@
                     </p>
                   </div>
                 </div>
-                <!-- End Info Item -->
+           
 
                 <div class="col-md-6">
                   <div
@@ -824,7 +729,7 @@
                     <p>+216 98 297 271</p>
                   </div>
                 </div>
-                <!-- End Info Item -->
+      
 
                 <div class="col-md-6">
                   <div
@@ -834,16 +739,16 @@
                   >
                     <i class="fa-solid fa-envelope"></i>
                     <h3>Email</h3>
-                    <p>contact.atvotreentreprise.com</p>
+                    <p>contact.CabidentService.com</p>
                   </div>
                 </div>
-                <!-- End Info Item -->
+              
               </div>
             </div>
           </div>
         </div>
       </section>
-      <!-- /Contact Section -->
+      
 
       <footer id="footer" class="footer light-background">
         <div class="container copyright text-center mt-4">
@@ -853,16 +758,12 @@
             <span>All Rights Reserved</span>
           </p>
           <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you've purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
             Designed by benDhia Malek
           </div>
         </div>
       </footer>
 
-      <!-- Scroll Top -->
+      
       <a
         href="#"
         id="scroll-top"

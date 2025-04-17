@@ -39,17 +39,7 @@
         <span *ngIf="!isCollapsed">Patients</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [class.active]="activeItem === 'rendezvous'"
-        title="Rendez-vous"
-        (click)="setActiveAndNavigate('rendezvous', 'rendezvous')"
-      >
-        <i class="fas fa-calendar-check"></i>
-        <span *ngIf="!isCollapsed">Rendez-vous</span>
-      </a>
-    </li>
+    
     <li class="nav-item logout-item">
       <a class="nav-link logout-link" title="Se déconnecter" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i>

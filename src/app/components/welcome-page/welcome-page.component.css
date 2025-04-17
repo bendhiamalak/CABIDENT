@@ -1612,10 +1612,8 @@ input, textarea, select {
 .service-details ul i {
   font-size: 20px;
   margin-right: 8px;
-  color: #78C2AD; /* Remplacement de var(--accent-color) */
+  color: #78C2AD;
 }
-
-/* Dans votre fichier CSS du composant */
 .alert {
   margin: 20px auto;
   max-width: 600px;
@@ -1625,4 +1623,60 @@ input, textarea, select {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-get-started {
+  display: inline-block;
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.btn-get-started:hover {
+  background: linear-gradient(135deg, #66BB6A, #388E3C);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-get-started:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-get-started {
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.nav-link {
+  color: black;
+  padding: 0.5rem;
+  transition: color 0.3s;
+  text-decoration: none;
+
+  &.active {
+    color: #78C2AD;
+    font-weight: bold;
+   
+  }
 }

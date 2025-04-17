@@ -16,9 +16,10 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ReminderService } from '../../services/reminder.service';
 registerLocaleData(localeFr);
 declare var $: any;
-
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -39,7 +40,9 @@ export class CalendarComponent implements AfterViewInit {
 
   constructor(
     private rdvService: RendezVousService,
-    private calendarService:CalendarService
+    private calendarService:CalendarService,
+    private router: Router,
+    private reminderService:ReminderService
   ) {}
 
 
@@ -231,4 +234,17 @@ async deleteAppointment(id?: string): Promise<void> {
   }
 }
 
+navigateToConsultation(patientId: string): void {
+  if (!patientId) {
+    console.error('No patient ID provided');
+    return;
+  }
+  this.router.navigate(['/admin/consultations', patientId]);
+}
+
+sendOne(id: string) {
+  this.reminderService.sendReminderById(id).subscribe((response) => {
+    alert(response.message);
+  });
+}
 }

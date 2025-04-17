@@ -1,9 +1,8 @@
-
-
 export interface Consultation {
-    id?: string;
+  id?: string;
   patientId: string;
+  rendezVousId?:string;
   date: Date;
   notes: string;
-  dateCreation: Date;
+  dateCreation?: Date;
 }
