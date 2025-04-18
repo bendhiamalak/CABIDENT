@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReminderService {
-  private baseUrl='http://localhost:3000'
+  private baseUrl='https://cabident-api.onrender.com'
   constructor(private http:HttpClient) { }
 
   getAppointments(): Observable<any> {
