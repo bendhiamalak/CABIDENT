@@ -1,30 +1,32 @@
 # Cabident
-# 🏥 Gestion de Cabinet Médical - Projet Angular & Firebase
+# 🏥 Application de Gestion de Cabinet Médical - Angular + Firebase
 
-Ce projet est une application web développée avec **Angular** pour la gestion d'un cabinet médical. Il permet de gérer les patients, rendez-vous, médecins et plus encore. L'application est connectée à **Firebase** pour l'authentification, la base de données et l'hébergement.
+Cette application permet à un **cabinet médical** de gérer ses **rendez-vous**, **consultations**, et d’envoyer des **rappels par SMS**. Elle est conçue pour être utilisée par le **médecin**, le **secrétaire**, ainsi qu'une **interface patient** pour prise de rendez-vous en ligne.
 
-## 🚀 Fonctionnalités
+## 📌 Fonctionnalités principales
 
-- 🔐 Authentification (Firebase Auth)
-- 🧑‍⚕️ Gestion des médecins
-- 👨‍⚕️ Gestion des patients
-- 📅 Planification des rendez-vous
-- 💾 Stockage des données avec **Cloud Firestore**
-- ☁️ Déploiement Firebase Hosting
+### 👩‍⚕️ Interface Médecin / Secrétaire
+- 📆 **Calendrier dynamique** : visualisation des rendez-vous par jour
+- ➕ **Ajout de rendez-vous** avec sélection de date
+- 🔍 **Filtrage des rendez-vous** selon une date spécifique
+- 📝 **Ajout de notes de consultation** pour chaque patient
+- 📖 **Historique des consultations** disponibles pour chaque patient
+- 📲 **Rappel SMS automatisé** grâce à l’intégration avec **Twilio**
+
+### 👤 Interface Patient
+- 🗓️ **Prise de rendez-vous en ligne** via une interface simple
 
 ## 🛠️ Technologies utilisées
 
 - [Angular](https://angular.io/)
-- [Firebase](https://firebase.google.com/)
-  - Firebase Authentication
-  - Firestore Database
-  - Firebase Hosting
-- [AngularFire](https://github.com/angular/angularfire) pour connecter Angular à Firebase
+- [Firebase Firestore](https://firebase.google.com/products/firestore) (stockage des données)
+- [Twilio](https://www.twilio.com/) (envoi de SMS)
+- [Angular Material](https://material.angular.io/) (UI)
 
-## 📦 Installation
+## ⚙️ Installation
 
-1. **Clone le projet**
+1. **Clone du dépôt**
 
 ```bash
-git clone https://github.com/ton-utilisateur/nom-du-projet.git
-cd nom-du-projet
+git clone https://github.com/bendhiamalak/CABIDENT.git
+cd CABIDENT
