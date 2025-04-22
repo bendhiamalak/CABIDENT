@@ -21,7 +21,7 @@ Cette application permet à un **cabinet médical** de gérer ses **rendez-vous*
 - [Angular](https://angular.io/)
 - [Firebase Firestore](https://firebase.google.com/products/firestore) (stockage des données)
 - [Twilio](https://www.twilio.com/) (envoi de SMS)
-- [Angular Material](https://material.angular.io/) (UI)
+- [Bootswatch](https://bootswatch.com/) (UI)
 
 ## ⚙️ Installation
 
