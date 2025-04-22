@@ -1,27 +1,30 @@
-# CabidentFront
+# Cabident
+# 🏥 Gestion de Cabinet Médical - Projet Angular & Firebase
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.4.
+Ce projet est une application web développée avec **Angular** pour la gestion d'un cabinet médical. Il permet de gérer les patients, rendez-vous, médecins et plus encore. L'application est connectée à **Firebase** pour l'authentification, la base de données et l'hébergement.
 
-## Development server
+## 🚀 Fonctionnalités
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- 🔐 Authentification (Firebase Auth)
+- 🧑‍⚕️ Gestion des médecins
+- 👨‍⚕️ Gestion des patients
+- 📅 Planification des rendez-vous
+- 💾 Stockage des données avec **Cloud Firestore**
+- ☁️ Déploiement Firebase Hosting
 
-## Code scaffolding
+## 🛠️ Technologies utilisées
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- [Angular](https://angular.io/)
+- [Firebase](https://firebase.google.com/)
+  - Firebase Authentication
+  - Firestore Database
+  - Firebase Hosting
+- [AngularFire](https://github.com/angular/angularfire) pour connecter Angular à Firebase
 
-## Build
+## 📦 Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. **Clone le projet**
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+git clone https://github.com/ton-utilisateur/nom-du-projet.git
+cd nom-du-projet
